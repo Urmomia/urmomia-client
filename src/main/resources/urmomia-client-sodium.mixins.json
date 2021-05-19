@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "package": "dev.urmomia.mixin.sodium",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "SodiumBlockOcculsionCacheMixin",
+    "SodiumBlockRendererMixin",
+    "SodiumFluidRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

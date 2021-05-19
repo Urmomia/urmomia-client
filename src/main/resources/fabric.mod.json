@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "urmomia-client",
+  "version": "${version}",
+
+  "name": "Urmomia Client",
+  "description": "based",
+  "authors": [
+    "honada",
+    "Codex1729",
+    "ChompChompDead",
+    "ProfKambing"
+  ],
+
+  "icon": "assets/urmomia-client/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.urmomia.MainClient"
+    ]
+  },
+  "mixins": [
+    "urmomia-client.mixins.json",
+    "urmomia-client-sodium.mixins.json",
+    "urmomia-client-indigo.mixins.json"
+  ],
+
+  "accessWidener": "urmomia-client.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "minecraft": "1.16.x"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "package": "dev.urmomia.mixin.indigo",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "AbstractQuadRendererMixin",
+    "TerrainRenderContextMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
