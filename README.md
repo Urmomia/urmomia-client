@@ -1,4 +1,4 @@
-# ![Urmomia](https://cdn.discordapp.com/avatars/838743275518033930/727d038b3da2b11514d0a4feac0deeca.webp?size=32) Urmomia Client
+# ![Urmomia](https://cdn.discordapp.com/icons/838739066895597606/e2095d9a6e3cab5111d41280ada9f456.webp?size=64) Urmomia Client
 ![GitHub last commit](https://img.shields.io/github/last-commit/Urmomia/Urmomia-Client)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Urmomia/Urmomia-Client)
 ![GitHub contributors](https://img.shields.io/github/contributors/Urmomia/Urmomia-Client)
