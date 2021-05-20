@@ -1,16 +1,9 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.mixin;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.blaze3d.platform.GlStateManager;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.render.HandView;
-import dev.urmomia.utils.Utils;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -23,13 +16,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static dev.urmomia.utils.Utils.mc;
+
 @Mixin(HeldItemRenderer.class)
 public abstract class HeldItemRendererMixin {
 
     @ModifyVariable(method = "renderItem(FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/network/ClientPlayerEntity;I)V", at = @At(value = "STORE", ordinal = 0), index = 6)
     private float modifySwing(float swingProgress) {
         HandView module = Modules.get().get(HandView.class);
-        MinecraftClient mc = Utils.mc;
         Hand hand = MoreObjects.firstNonNull(mc.player.preferredHand, Hand.MAIN_HAND);
 
         if (module.isActive()) {

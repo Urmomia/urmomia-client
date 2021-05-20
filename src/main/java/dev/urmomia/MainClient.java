@@ -21,7 +21,6 @@ import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.misc.DiscordPresence;
 import dev.urmomia.systems.modules.render.hud.HUD;
 import dev.urmomia.utils.Utils;
-import dev.urmomia.utils.entity.EntityUtils;
 import dev.urmomia.utils.misc.FakeClientPlayer;
 import dev.urmomia.utils.misc.MeteorPlayers;
 import dev.urmomia.utils.misc.Names;
@@ -75,7 +74,6 @@ public class MainClient implements ClientModInitializer {
 
         mc = MinecraftClient.getInstance();
         Utils.mc = mc;
-        EntityUtils.mc = mc;
 
         Systems.addPreLoadTask(() -> {
             if (!Modules.get().getFile().exists()) {

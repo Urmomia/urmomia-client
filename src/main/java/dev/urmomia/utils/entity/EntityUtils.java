@@ -1,9 +1,10 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.utils.entity;
+
+import static dev.urmomia.utils.Utils.mc;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 import dev.urmomia.systems.friends.Friends;
 import dev.urmomia.utils.Utils;
@@ -12,7 +13,6 @@ import dev.urmomia.utils.player.Rotations;
 import dev.urmomia.utils.render.color.Color;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,16 +21,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameMode;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
 
 public class EntityUtils {
     private static final List<Entity> entities = new ArrayList<>();
-    public static MinecraftClient mc;
 
     public static boolean isAttackable(EntityType<?> type) {
         return type != EntityType.AREA_EFFECT_CLOUD && type != EntityType.ARROW && type != EntityType.FALLING_BLOCK && type != EntityType.FIREWORK_ROCKET && type != EntityType.ITEM && type != EntityType.LLAMA_SPIT && type != EntityType.SPECTRAL_ARROW && type != EntityType.ENDER_PEARL && type != EntityType.EXPERIENCE_BOTTLE && type != EntityType.POTION && type != EntityType.TRIDENT && type != EntityType.LIGHTNING_BOLT && type != EntityType.FISHING_BOBBER && type != EntityType.EXPERIENCE_ORB && type != EntityType.EGG;

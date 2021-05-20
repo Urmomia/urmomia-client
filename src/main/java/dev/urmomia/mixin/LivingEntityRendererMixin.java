@@ -1,14 +1,8 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.mixin;
 
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.render.Chams;
 import dev.urmomia.systems.modules.render.Freecam;
-import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.misc.text.TextUtils;
 import dev.urmomia.utils.player.Rotations;
 import dev.urmomia.utils.render.color.Color;
@@ -30,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import static dev.urmomia.utils.Utils.mc;
 import static org.lwjgl.opengl.GL11.*;
 
 @Mixin(LivingEntityRenderer.class)
@@ -46,19 +41,19 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
     //3rd Person Rotation
     @ModifyVariable(method = "render", ordinal = 2, at = @At(value = "STORE", ordinal = 0))
     public float changeYaw(float oldValue, LivingEntity entity) {
-        if (entity.equals(Utils.mc.player) && Rotations.rotationTimer < 10) return Rotations.serverYaw;
+        if (entity.equals(mc.player) && Rotations.rotationTimer < 10) return Rotations.serverYaw;
         return oldValue;
     }
 
     @ModifyVariable(method = "render", ordinal = 3, at = @At(value = "STORE", ordinal = 0))
     public float changeHeadYaw(float oldValue, LivingEntity entity) {
-        if (entity.equals(Utils.mc.player) && Rotations.rotationTimer < 10) return Rotations.serverYaw;
+        if (entity.equals(mc.player) && Rotations.rotationTimer < 10) return Rotations.serverYaw;
         return oldValue;
     }
 
     @ModifyVariable(method = "render", ordinal = 5, at = @At(value = "STORE", ordinal = 3))
     public float changePitch(float oldValue, LivingEntity entity) {
-        if (entity.equals(Utils.mc.player) && Rotations.rotationTimer < 10) return Rotations.serverPitch;
+        if (entity.equals(mc.player) && Rotations.rotationTimer < 10) return Rotations.serverPitch;
         return oldValue;
     }
 

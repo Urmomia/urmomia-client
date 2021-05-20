@@ -1,8 +1,3 @@
-/*
-
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.gui.widgets.containers;
 
 import dev.urmomia.gui.renderer.GuiRenderer;
