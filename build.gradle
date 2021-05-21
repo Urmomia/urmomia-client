@@ -10,7 +10,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + (System.getenv("CIRCLE_BUILD_NUM") != null ? ("-" + System.getenv("CIRCLE_BUILD_NUM")) : "")
+version = project.mod_version
 group = project.maven_group
 
 minecraft {
@@ -68,7 +68,7 @@ processResources {
 		include "fabric.mod.json"
 		expand "version": project.version
 		
-		filter { line -> line.replace("@devbuild@", System.getenv("CIRCLE_BUILD_NUM") != null ? System.getenv("CIRCLE_BUILD_NUM") : "") }
+		filter { line -> line.replace("@devbuild@", "")}
 	}
 
 	from(sourceSets.main.resources.srcDirs) {
@@ -114,8 +114,8 @@ task generatePacketUtils() {
 		}
 
 		// Generate PacketUtils.java
-		def writer = new File("src/main/java/minegame159/meteorclient/utils/network/PacketUtils.java").newWriter()
-		writer << "package minegame159.meteorclient.utils.network;\n\n"
+		def writer = new File("src/main/java/dev/urmomia/utils/network/PacketUtils.java").newWriter()
+		writer << "package dev.urmomia.utils.network;\n\n"
 
 		//   Write imports
 		writer << "import net.minecraft.network.Packet;\n"
@@ -178,7 +178,7 @@ jar {
 	from "LICENSE"
 
 	manifest {
-		attributes("Main-Class": "minegame159.meteorclient.Main")
+		attributes("Main-Class": "dev.urmomia.Main")
 	}
 }
 
