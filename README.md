@@ -1,7 +1,7 @@
-# ![Urmomia](https://cdn.discordapp.com/avatars/838743275518033930/727d038b3da2b11514d0a4feac0deeca.webp?size=32) Urmomia Client
-![GitHub last commit](https://img.shields.io/github/last-commit/codex1729/urmomia)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/codex1729/urmomia)
-![GitHub contributors](https://img.shields.io/github/contributors/codex1729/urmomia)
+# ![Urmomia](https://cdn.discordapp.com/icons/838739066895597606/e2095d9a6e3cab5111d41280ada9f456.webp?size=64) Urmomia Client
+![GitHub last commit](https://img.shields.io/github/last-commit/Urmomia/Urmomia-Client)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Urmomia/Urmomia-Client)
+![GitHub contributors](https://img.shields.io/github/contributors/Urmomia/Urmomia-Client)
 ![ver](https://img.shields.io/badge/Working%20on-m0.7.3-blueviolet)
 [![GitHub All Releases](https://img.shields.io/github/downloads/codex1729/urmomia/total.svg)](https://github.com/codex1729/urmomia/releases)
 
