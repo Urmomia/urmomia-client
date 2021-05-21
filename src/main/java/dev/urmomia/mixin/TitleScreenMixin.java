@@ -78,12 +78,11 @@ public class TitleScreenMixin extends Screen {
 
         fullLength = text1Length + text2Length + text3Length + text4Length + text5Length + text6Length + text8Length;
         prevWidth = 0;
-
-        addButton(new ButtonWidget((this.width / 2) - 100 - 3, (this.height / 2) - 20 - 3, 45, 20, new LiteralText("HUD"), button -> {
-            Tabs.get().get(3).openScreen(GuiThemes.get());
-        }));
-        addButton(new ButtonWidget((this.width / 2) - 100 - 3, (this.height / 2) + 3, 60, 20, new LiteralText("Config"), button -> {
+        addButton(new ButtonWidget((this.width / 2) - 100 - 60 - 3, (this.height / 2) - 20 - 5, 60, 20, new LiteralText("Config"), button -> {
             Tabs.get().get(1).openScreen(GuiThemes.get());
+        }));
+        addButton(new ButtonWidget((this.width / 2) - 100 - 45 - 3, (this.height / 2), 45, 20, new LiteralText("HUD"), button -> {
+            Tabs.get().get(3).openScreen(GuiThemes.get());
         }));
     }
 

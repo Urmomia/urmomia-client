@@ -23,30 +23,19 @@ public class WThemeWindow extends WWindow implements ThemeWidget {
             renderer.quad(x, y + header.height, width, height - header.height, theme().backgroundColor.get());
             //Border
             switch(theme().borderGui.get()) {
-                case None:
-                hh = false;
-                forcehh = false;
-                break;
+                case None: hh = false; forcehh = false; break;
                 case Horizontal:
                 renderer.horizontalGradientGuiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
-                hh = false;
-                forcehh = true;
-                break;
+                hh = false; forcehh = true; break;
                 case Vertical:
                 renderer.verticalGradientGuiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
-                hh = true;
-                forcehh = false;
-                break;
+                hh = true; forcehh = false; break;
                 case Diagonal:
                 renderer.diagonalGradientGuiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
-                hh = true;
-                forcehh = false;
-                break;
+                hh = false; forcehh = true; break;
                 case Solid:
                 renderer.guiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get());
-                hh = true;
-                forcehh = false;
-                break;
+                hh = true; forcehh = false; break;
             }
             
         }
@@ -55,6 +44,7 @@ public class WThemeWindow extends WWindow implements ThemeWidget {
     private class WThemeHeader extends WHeader {
         @Override
         protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) {
+            //Header g
             if (!(forcehh) && !(theme().gradient.get()) || hh && theme().gradient.get()) renderer.quad(this, theme().accentColor.get());
             if (forcehh && !(theme().gradient.get()) || !(hh) && theme().gradient.get()) renderer.horizontalGradientQuad(this, theme().accentColor.get(), theme().accentColor2.get());
         }

@@ -63,10 +63,8 @@ public abstract class WidgetScreen extends Screen {
             animProgress = 1;
 
             if (this instanceof TabScreen && parent instanceof TabScreen && !(this instanceof HudTab.HudScreen)) {
-                parent = ((TabScreen) parent).parent;
-            }
-            if(this instanceof TabScreen && !(this instanceof HudTab.HudScreen)) {
                 if (Modules.get().get(HUD.class).isActive()) Modules.get().get(HUD.class).toggle();
+                parent = ((TabScreen) parent).parent;
             }
         }
     }

@@ -21,6 +21,8 @@ public class WThemeModule extends WPressable implements ThemeWidget {
 
     private double animationProgress2;
 
+    private double f;
+
     public WThemeModule(Module module) {
         this.module = module;
 
@@ -59,17 +61,19 @@ public class WThemeModule extends WPressable implements ThemeWidget {
         ThemeGuiTheme theme = theme();
         double pad = pad();
 
-        animationProgress1 += delta * 4 * ((module.isActive() || mouseOver) ? 1 : -1);
+        floppa(theme);
+
+        animationProgress1 += delta * (4 - (f)) * ((module.isActive() || mouseOver) ? 1 : -1);
         animationProgress1 = Utils.clamp(animationProgress1, 0, 1);
 
-        animationProgress2 += delta * 6 * (module.isActive() ? 1 : -1);
+        animationProgress2 += delta * (6 - (f)) * (module.isActive() ? 1 : -1);
         animationProgress2 = Utils.clamp(animationProgress2, 0, 1);
 
         if (animationProgress1 > 0) {
-            renderer.quad(x, y, width * animationProgress1, height, theme.moduleBackground.get());
+            renderer.quad(x +(f), y, width * animationProgress1, height, theme.moduleBackground.get());
         }
         if (animationProgress2 > 0) {
-            renderer.quad(x, y + height * (1 - animationProgress2), theme.scale(2), height * animationProgress2, theme.accentColor.get());
+            renderer.quad(x +(f), y + height * (1 - animationProgress2), theme.scale(2), height * animationProgress2, theme.accentColor.get());
         }
 
         double x = this.x + pad;
@@ -83,5 +87,15 @@ public class WThemeModule extends WPressable implements ThemeWidget {
         }
 
         renderer.text(module.title, x, y + pad, theme.textColor.get(), false);
+    }
+
+    public void floppa(ThemeGuiTheme theme) {
+        switch(theme.borderGui.get()) {
+            case None: f = 0; break;
+            case Horizontal:
+            case Vertical:
+            case Diagonal:
+            case Solid: f = theme.scale.get() * 2; break;
+        }
     }
 }
