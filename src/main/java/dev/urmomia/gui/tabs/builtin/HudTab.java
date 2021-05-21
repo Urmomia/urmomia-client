@@ -1,5 +1,6 @@
 package dev.urmomia.gui.tabs.builtin;
 
+import dev.urmomia.MainClient;
 import dev.urmomia.events.render.Render2DEvent;
 import dev.urmomia.gui.GuiTheme;
 import dev.urmomia.gui.screens.HudElementScreen;
@@ -35,7 +36,7 @@ public class HudTab extends Tab {
 
     @Override
     public void openScreen(GuiTheme theme) {
-        if (!(Modules.get().get(HUD.class).isActive())) Modules.get().get(HUD.class).toggle();
+        if (!(Modules.get().get(HUD.class).isActive())) Modules.get().get(HUD.class).toggle(); MainClient.hudWasOn = true;
         mc.openScreen(createScreen(theme));
     }
 

@@ -41,6 +41,7 @@ public class WThemeWindow extends WWindow implements ThemeWidget {
                 renderer.diagonalGradientGuiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
                 hh = true;
                 forcehh = false;
+                break;
                 case Solid:
                 renderer.guiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get());
                 hh = true;
