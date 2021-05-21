@@ -56,8 +56,7 @@ public class WThemeWindow extends WWindow implements ThemeWidget {
         @Override
         protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) {
             if (!(forcehh) && !(theme().gradient.get()) || hh && theme().gradient.get()) renderer.quad(this, theme().accentColor.get());
-            if (!(hh) && theme().gradient.get()) renderer.horizontalGradientQuad(this, theme().accentColor.get(), theme().accentColor2.get());
-            if (forcehh && !(theme().gradient.get())) renderer.horizontalGradientQuad(this, theme().accentColor.get(), theme().accentColor2.get());
+            if (forcehh && !(theme().gradient.get()) || !(hh) && theme().gradient.get()) renderer.horizontalGradientQuad(this, theme().accentColor.get(), theme().accentColor2.get());
         }
     }
 }
