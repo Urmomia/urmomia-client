@@ -23,6 +23,7 @@ public class AutoLogin extends Module {
     private int ticks;
     private int d;
     private int joins;
+    private int said = 0;
 
     private String passw;
 
@@ -35,6 +36,7 @@ public class AutoLogin extends Module {
         ticks = 0;
         d = 2;
         joins = 0;
+        said = 0;
     }
 //pee
     @Override
@@ -42,12 +44,14 @@ public class AutoLogin extends Module {
         ticks = 0;
         d = 2;
         joins = 0;
+        said = 0;
     }
 
     @EventHandler
     private void onGameJoin(GameJoinedEvent event) {
         joins++;
         if (d == 2) d = 1;
+        said = 0;
     }
 
     @EventHandler
@@ -55,6 +59,7 @@ public class AutoLogin extends Module {
         ticks = 0;
         d = 2;
         joins = 0;
+        said = 0;
     }
 
     @EventHandler
@@ -64,7 +69,7 @@ public class AutoLogin extends Module {
             if (ticks >= 30) d = 0; break;
         }
         //delay
-        if (joins == 1 && d == 0 && ticks >= 30) mc.player.sendChatMessage("/login " + passw);
+        if (said == 0 && joins == 1 && d == 0 && ticks >= 30) mc.player.sendChatMessage("/login " + passw); said = 1;
     }
 
     private void oven() {
