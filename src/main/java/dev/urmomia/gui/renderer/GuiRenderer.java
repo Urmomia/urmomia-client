@@ -204,12 +204,12 @@ public class GuiRenderer {
         boxEdges(widget.x, widget.y, widget.width, widget.height, color);
     }
 
-    public void qBoxEdges(double x, double y, double width, double height, Color color) {
-        mb.qBoxEdges(x, y, width, height, color);
+    public void guiBorder(double x, double y, double width, double height, Color color) {
+        mb.guiBorder(x, y, width, height, color);
     }
 
-    public void qBoxEdges(WWidget widget, Color color) {
-        qBoxEdges(widget.x, widget.y, widget.width, widget.height, color);
+    public void guiBorder(WWidget widget, Color color) {
+        guiBorder(widget.x, widget.y, widget.width, widget.height, color);
     }
 
     public void horizontalGradientQuad(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, double x4, double y4, double z4, Color left, Color right) {
@@ -224,20 +224,28 @@ public class GuiRenderer {
         horizontalGradientQuad(widget.x, widget.y, widget.width, widget.height, left, right);
     }
 
-    public void horizontalGradientBoxEdges(double x, double y, double width, double height, Color left, Color right) {
-        mb.horizontalGradientBoxEdges(x, y, width, height, left, right);
+    public void horizontalGradientGuiBorder(double x, double y, double width, double height, Color left, Color right) {
+        mb.horizontalGradientGuiBorder(x, y, width, height, left, right);
     }
 
-    public void horizontalGradientBoxEdges(WWidget widget, Color left, Color right) {
-        horizontalGradientBoxEdges(widget.x, widget.y, widget.width, widget.height, left, right);
+    public void horizontalGradientGuiBorder(WWidget widget, Color left, Color right) {
+        horizontalGradientGuiBorder(widget.x, widget.y, widget.width, widget.height, left, right);
     }
 
-    public void verticalGradientBoxEdges(double x, double y, double width, double height, Color top, Color bottom) {
-        mb.verticalGradientBoxEdges(x, y, width, height, top, bottom);
+    public void verticalGradientGuiBorder(double x, double y, double width, double height, Color top, Color bottom) {
+        mb.verticalGradientGuiBorder(x, y, width, height, top, bottom);
     }
 
-    public void verticalGradientBoxEdges(WWidget widget, Color top, Color bottom) {
-        verticalGradientBoxEdges(widget.x, widget.y, widget.width, widget.height, top, bottom);
+    public void verticalGradientGuiBorder(WWidget widget, Color top, Color bottom) {
+        verticalGradientGuiBorder(widget.x, widget.y, widget.width, widget.height, top, bottom);
+    }
+
+    public void diagonalGradientGuiBorder(double x, double y, double width, double height, Color color1, Color color2) {
+        mb.diagonalGradientGuiBorder(x, y, width, height, color1, color2);
+    }
+
+    public void diagonalGradientGuiBorder(WWidget widget, Color color1, Color color2) {
+        diagonalGradientGuiBorder(widget.x, widget.y, widget.width, widget.height, color1, color2);
     }
     
     public void quad(double x, double y, double width, double height, GuiTexture texture, Color color) {

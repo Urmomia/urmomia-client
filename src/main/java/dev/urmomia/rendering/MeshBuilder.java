@@ -219,29 +219,33 @@ public class MeshBuilder {
         if (vertical) verticalGradientQuad(x1, y1, 0, x2, y1, 0, x2, y2, 0, x1, y2, 0, left, right);
     }
 
+    public void quadLine(double x1, double y1, double x2, double y2, Color color) {
+        quad(x1, y1, 0, x2, y1, 0, x2, y2, 0, x1, y2, 0, color);
+    }
+
     public void horizontalGradientLine(double x1, double y1, double x2, double y2, Color left, Color right) {
         horizontalGradientQuad(x1, y1 + 2, 0, x2, y1 + 2, 0, x2, y2 + 2, 0, x1, y2 + 2, 0, left, right);
     }
 
-    public void qBoxEdges(double x1, double y1, double x2, double y2, Color color, int excludeDir) {
-        if (Dir.is(excludeDir, Dir.WEST) && Dir.is(excludeDir, Dir.NORTH)) quad(x1 + 2, y1, x1, y2, color);
-        if (Dir.is(excludeDir, Dir.WEST) && Dir.is(excludeDir, Dir.SOUTH)) quad(x1 + 2, y1, x1, y2, color);
-        if (Dir.is(excludeDir, Dir.EAST) && Dir.is(excludeDir, Dir.NORTH)) quad(x2 - 2, y1, x2, y2, color);
-        if (Dir.is(excludeDir, Dir.EAST) && Dir.is(excludeDir, Dir.SOUTH)) quad(x2 - 2, y1, x2, y2, color);
+    public void guiBorder(double x1, double y1, double x2, double y2, Color color, int excludeDir) {
+        if (Dir.is(excludeDir, Dir.WEST) && Dir.is(excludeDir, Dir.NORTH)) quadLine(x1 + 2, y1, x1, y2, color);
+        if (Dir.is(excludeDir, Dir.WEST) && Dir.is(excludeDir, Dir.SOUTH)) quadLine(x1 + 2, y1, x1, y2, color);
+        if (Dir.is(excludeDir, Dir.EAST) && Dir.is(excludeDir, Dir.NORTH)) quadLine(x2 - 2, y1, x2, y2, color);
+        if (Dir.is(excludeDir, Dir.EAST) && Dir.is(excludeDir, Dir.SOUTH)) quadLine(x2 - 2, y1, x2, y2, color);
 
-        if (Dir.is(excludeDir, Dir.NORTH)) quad(x1, y1, x2, y1, color);
-        if (Dir.is(excludeDir, Dir.NORTH)) quad(x1, y2 + 2, x2, y2, color);
-        if (Dir.is(excludeDir, Dir.SOUTH)) quad(x1, y1, x2, y1, color);
-        if (Dir.is(excludeDir, Dir.SOUTH)) quad(x1, y2 + 2, x2, y2, color);
+        if (Dir.is(excludeDir, Dir.NORTH)) quadLine(x1, y1, x2, y1, color);
+        if (Dir.is(excludeDir, Dir.NORTH)) quadLine(x1, y2 - 2, x2, y2, color);
+        if (Dir.is(excludeDir, Dir.SOUTH)) quadLine(x1, y1, x2, y1, color);
+        if (Dir.is(excludeDir, Dir.SOUTH)) quadLine(x1, y2 - 2, x2, y2, color);
 
-        if (Dir.is(excludeDir, Dir.WEST)) quad(x1, y1, x1, y1, color);
-        if (Dir.is(excludeDir, Dir.WEST)) quad(x1, y2, x1, y2, color);
-        if (Dir.is(excludeDir, Dir.EAST)) quad(x2, y1, x2, y1, color);
-        if (Dir.is(excludeDir, Dir.EAST)) quad(x2, y2, x2, y2, color);
+        if (Dir.is(excludeDir, Dir.WEST)) quadLine(x1, y1, x1, y1, color);
+        if (Dir.is(excludeDir, Dir.WEST)) quadLine(x1, y2, x1, y2, color);
+        if (Dir.is(excludeDir, Dir.EAST)) quadLine(x2, y1, x2, y1, color);
+        if (Dir.is(excludeDir, Dir.EAST)) quadLine(x2, y2, x2, y2, color);
     }
 
-    public void qBoxEdges(double x, double y, double width, double height, Color color) {
-        qBoxEdges(x, y, x + width, y + height, color);
+    public void guiBorder(double x, double y, double width, double height, Color color) {
+        guiBorder(x, y, x + width, y + height, color, 0);
     }
 
     public void gradientBoxEdges(double x1, double y1, double z1, double x2, double y2, double z2, Color leftColor1, Color leftColor2, Color upColor1, Color upColor2, Color rightColor1, Color rightColor2, Color downColor1, Color downColor2, boolean vertical, int excludeDir) {
@@ -250,10 +254,10 @@ public class MeshBuilder {
         if (Dir.is(excludeDir, Dir.EAST) && Dir.is(excludeDir, Dir.NORTH)) gradientLine(x2 - 2, y1, x2, y2, rightColor1, rightColor2, vertical);
         if (Dir.is(excludeDir, Dir.EAST) && Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x2 - 2, y1, x2, y2, rightColor1, rightColor2, vertical);
 
-        if (Dir.is(excludeDir, Dir.NORTH)) gradientLine(x1, y1, x2, y1, upColor1, upColor2, !(vertical));
-        if (Dir.is(excludeDir, Dir.NORTH)) gradientLine(x1, y2 + 2, x2, y2, downColor1, downColor2, !(vertical));
-        if (Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x1, y1, x2, y1, upColor1, upColor2, !(vertical));
-        if (Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x1, y2 + 2, x2, y2, downColor1, downColor2, !(vertical));
+        if (Dir.is(excludeDir, Dir.NORTH)) gradientLine(x1, y1 + 2, x2, y1 - 2, upColor1, upColor2, !(vertical));
+        if (Dir.is(excludeDir, Dir.NORTH)) gradientLine(x1, y2 - 2, x2, y2 + 2, downColor1, downColor2, !(vertical));
+        if (Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x1, y1 + 2, x2, y1 - 2, upColor1, upColor2, !(vertical));
+        if (Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x1, y2 - 2, x2, y2 + 2, downColor1, downColor2, !(vertical));
 
         if (Dir.is(excludeDir, Dir.WEST)) gradientLine(x1, y1, x1, y1, leftColor1, leftColor1, vertical);
         if (Dir.is(excludeDir, Dir.WEST)) gradientLine(x1, y2, x1, y2, rightColor1, rightColor1, vertical);
@@ -261,11 +265,41 @@ public class MeshBuilder {
         if (Dir.is(excludeDir, Dir.EAST)) gradientLine(x2, y2, x2, y2, downColor2, downColor2, !(vertical));
     }
 
+    public void gradientGuiBorder(double x1, double y1, double z1, double x2, double y2, double z2, Color leftColor1, Color leftColor2, Color upColor1, Color upColor2, Color rightColor1, Color rightColor2, Color downColor1, Color downColor2, boolean vertical, int excludeDir) {
+        if (Dir.is(excludeDir, Dir.WEST) && Dir.is(excludeDir, Dir.NORTH)) gradientLine(x1 + 2, y1, x1, y2, leftColor1, leftColor2, vertical);
+        if (Dir.is(excludeDir, Dir.WEST) && Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x1 + 2, y1, x1, y2, leftColor1, leftColor2, vertical);
+        if (Dir.is(excludeDir, Dir.EAST) && Dir.is(excludeDir, Dir.NORTH)) gradientLine(x2 - 2, y1, x2, y2, rightColor1, rightColor2, vertical);
+        if (Dir.is(excludeDir, Dir.EAST) && Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x2 - 2, y1, x2, y2, rightColor1, rightColor2, vertical);
+
+        if (Dir.is(excludeDir, Dir.NORTH)) gradientLine(x1, y1, x2, y1, upColor1, upColor2, !(vertical));
+        if (Dir.is(excludeDir, Dir.NORTH)) gradientLine(x1, y2 - 2, x2, y2, downColor1, downColor2, !(vertical));
+        if (Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x1, y1, x2, y1, upColor1, upColor2, !(vertical));
+        if (Dir.is(excludeDir, Dir.SOUTH)) gradientLine(x1, y2 - 2, x2, y2, downColor1, downColor2, !(vertical));
+
+        if (Dir.is(excludeDir, Dir.WEST)) gradientLine(x1, y1, x1, y1, leftColor1, leftColor1, vertical);
+        if (Dir.is(excludeDir, Dir.WEST)) gradientLine(x1, y2, x1, y2, rightColor1, rightColor1, vertical);
+        if (Dir.is(excludeDir, Dir.EAST)) gradientLine(x2, y1, x2, y1, upColor2, upColor2, !(vertical));
+        if (Dir.is(excludeDir, Dir.EAST)) gradientLine(x2, y2, x2, y2, downColor2, downColor2, !(vertical));
+    }
+
+    public void horizontalGradientGuiBorder(double x, double y, double width, double height, Color color1, Color color2) {
+        gradientGuiBorder(x, y, 0, x + width, y + height, 0, color1, color1, color1, color2, color2, color2, color1, color2, true, 0);
+    }
+
+    public void diagonalGradientGuiBorder(double x, double y, double width, double height, Color color1, Color color2) {
+        gradientGuiBorder(x, y, 0, x + width, y + height, 0, color1, color2, color1, color2, color2, color1, color2, color1, true, 0);
+    }
+
+    public void verticalGradientGuiBorder(double x, double y, double width, double height, Color color1, Color color2) {
+        gradientGuiBorder(x, y, 0, x + width, y + height, 0, color1, color2, color1, color1, color1, color2, color2, color2, true, 0);
+    }
+
     public void horizontalGradientBoxEdges(double x, double y, double width, double height, Color color1, Color color2) {
-        gradientBoxEdges(x, y, 0, x + width, y + height, 0, color1, color1, color1, color2, color2, color2, color1, color2, false, 0);
+        gradientBoxEdges(x, y, 0, x + width, y + height, 0, color1, color1, color1, color2, color2, color2, color1, color2, true, 0);
     }
 
     public void verticalGradientBoxEdges(double x, double y, double width, double height, Color color1, Color color2) {
         gradientBoxEdges(x, y, 0, x + width, y + height, 0, color1, color2, color1, color1, color1, color2, color2, color2, true, 0);
     }
+    //why did i even make booleans to indicate if it should be vertical or not if it just breaks it even more
 }

@@ -344,6 +344,7 @@ public class ThemeGuiTheme extends GuiTheme {
         None,
         Horizontal,
         Vertical,
+        Diagonal,
         Solid
     }
 }

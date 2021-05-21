@@ -6,6 +6,8 @@ import dev.urmomia.gui.widgets.containers.WWindow;
 
 public class WThemeWindow extends WWindow implements ThemeWidget {
     private boolean hh;
+    private boolean forcehh;
+
     public WThemeWindow(String title) {
         super(title);
     }
@@ -23,18 +25,26 @@ public class WThemeWindow extends WWindow implements ThemeWidget {
             switch(theme().borderGui.get()) {
                 case None:
                 hh = false;
+                forcehh = false;
                 break;
                 case Horizontal:
-                renderer.horizontalGradientBoxEdges(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
+                renderer.horizontalGradientGuiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
                 hh = false;
+                forcehh = true;
                 break;
                 case Vertical:
-                renderer.verticalGradientBoxEdges(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
+                renderer.verticalGradientGuiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
                 hh = true;
+                forcehh = false;
                 break;
-                case Solid:
-                renderer.qBoxEdges(x, y + header.height, width, height - header.height, theme().accentColor.get());
+                case Diagonal:
+                renderer.diagonalGradientGuiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get(), theme().accentColor2.get());
                 hh = true;
+                forcehh = false;
+                case Solid:
+                renderer.guiBorder(x, y + header.height, width, height - header.height, theme().accentColor.get());
+                hh = true;
+                forcehh = false;
                 break;
             }
             
@@ -44,8 +54,9 @@ public class WThemeWindow extends WWindow implements ThemeWidget {
     private class WThemeHeader extends WHeader {
         @Override
         protected void onRender(GuiRenderer renderer, double mouseX, double mouseY, double delta) {
-            if (hh && !(theme().gradient.get())) renderer.quad(this, theme().accentColor.get());
+            if (!(theme().gradient.get()) || hh && theme().gradient.get()) renderer.quad(this, theme().accentColor.get());
             if (!(hh) && theme().gradient.get()) renderer.horizontalGradientQuad(this, theme().accentColor.get(), theme().accentColor2.get());
+            if (forcehh && !(theme().gradient.get())) renderer.horizontalGradientQuad(this, theme().accentColor.get(), theme().accentColor2.get());
         }
     }
 }

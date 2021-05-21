@@ -35,6 +35,7 @@ public class HudTab extends Tab {
 
     @Override
     public void openScreen(GuiTheme theme) {
+        if (!(Modules.get().get(HUD.class).isActive())) Modules.get().get(HUD.class).toggle();
         mc.openScreen(createScreen(theme));
     }
 

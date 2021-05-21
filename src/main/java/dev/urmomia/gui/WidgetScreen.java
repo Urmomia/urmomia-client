@@ -65,6 +65,9 @@ public abstract class WidgetScreen extends Screen {
             if (this instanceof TabScreen && parent instanceof TabScreen && !(this instanceof HudTab.HudScreen)) {
                 parent = ((TabScreen) parent).parent;
             }
+            if(!(this instanceof HudTab.HudScreen)) {
+                if (Modules.get().get(HUD.class).isActive()) Modules.get().get(HUD.class).toggle();
+            }
         }
     }
 
@@ -248,12 +251,12 @@ public abstract class WidgetScreen extends Screen {
                 }
             });
 
-            MainClient.EVENT_BUS.unsubscribe(this);
-            GuiKeyEvents.canUseKeys = true;
-
             if (MainClient.hudWasOn == true && !(Modules.get().get(HUD.class).isActive())) {
                 Modules.get().get(HUD.class).toggle();
             }
+
+            MainClient.EVENT_BUS.unsubscribe(this);
+            GuiKeyEvents.canUseKeys = true;
 
             if (onClosed != null) {
                 for (Runnable action : onClosed) action.run();

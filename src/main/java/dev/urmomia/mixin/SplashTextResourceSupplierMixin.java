@@ -16,17 +16,17 @@ public class SplashTextResourceSupplierMixin {
     private boolean override = true;
     private final Random random = new Random();
 
-    private final List<String> meteorSplashes = getMeteorSplashes();
+    private final List<String> splashes = getUrmomiaSplashes();
 
     @Inject(method = "get", at = @At("HEAD"), cancellable = true)
     private void onApply(CallbackInfoReturnable<String> cir) {
         if (override) {
-            cir.setReturnValue(meteorSplashes.get(random.nextInt(meteorSplashes.size())));
+            cir.setReturnValue(splashes.get(random.nextInt(splashes.size())));
         }
         override = !override;
     }
 
-    private static List<String> getMeteorSplashes() {
+    private static List<String> getUrmomiaSplashes() {
         return Arrays.asList(
                 "§dbased",
                 ":EZ:",
@@ -34,11 +34,12 @@ public class SplashTextResourceSupplierMixin {
                 "hi!",
                 "cat",
                 "monkey",
-                "§6follow honsda.github.io uwu",
+                "§6follow honsda on github uwu",
                 "§5Urmomia on top!",
                 "§5based utility mod",
-                "do you play in §9OpenAnarchy.org§r?",
-                "§echeesecake butt fart shrimp"
+                "did you star the urmomia client github?",
+                "§echeesecake butt fart shrimp",
+                "§efart cheescake butt shrimp"
         );
     }
 

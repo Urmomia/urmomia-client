@@ -109,7 +109,6 @@ public class MainClient implements ClientModInitializer {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             Systems.save();
-            //OnlinePlayers.leave();
             GuiThemes.save();
         }));
 
@@ -130,7 +129,6 @@ public class MainClient implements ClientModInitializer {
 
     private void openClickGui() {
         if (Modules.get().get(HUD.class).isActive()) Modules.get().get(HUD.class).toggle(); hudWasOn = true;
-        if (!(Modules.get().get(HUD.class).isActive())) hudWasOn = false;
         Tabs.get().get(0).openScreen(GuiThemes.get());
     }
 

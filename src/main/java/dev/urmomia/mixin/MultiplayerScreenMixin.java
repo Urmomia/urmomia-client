@@ -50,7 +50,7 @@ public class MultiplayerScreenMixin extends Screen {
             client.openScreen(GuiThemes.get().proxiesScreen());
         }));
 
-        addButton(new ButtonWidget(3, this.height - 30 - 3, 90, 20, new LiteralText("Toggle AL"), button -> {
+        addButton(new ButtonWidget(3, this.height - 30 - 3, 80, 20, new LiteralText("Toggle AL"), button -> {
             Modules.get().get(AutoLogin.class).toggle();
         }));
     }

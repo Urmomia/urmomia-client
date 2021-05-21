@@ -5,11 +5,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import dev.urmomia.gui.GuiThemes;
+import dev.urmomia.gui.tabs.Tabs;
 import dev.urmomia.systems.config.Config;
 import dev.urmomia.utils.render.color.Color;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 @Mixin(TitleScreen.class)
@@ -18,6 +22,7 @@ public class TitleScreenMixin extends Screen {
     private final int WHITE = Color.fromRGBA(255, 255, 255, 255);
     private final int GRAY = Color.fromRGBA(175, 175, 175, 255);
     private final int PURPLE = Color.fromRGBA(138, 48, 255, 255);
+    private final int SUS = Color.fromRGBA(195, 0, 255, 255);
 
     private String text1;
     private int text1Length;
@@ -73,6 +78,13 @@ public class TitleScreenMixin extends Screen {
 
         fullLength = text1Length + text2Length + text3Length + text4Length + text5Length + text6Length + text8Length;
         prevWidth = 0;
+
+        addButton(new ButtonWidget(3, (this.height / 2), 45, 20, new LiteralText("HUD"), button -> {
+            Tabs.get().get(3).openScreen(GuiThemes.get());
+        }));
+        addButton(new ButtonWidget(3, (this.height / 2) - 20, 60, 20, new LiteralText("Config"), button -> {
+            Tabs.get().get(1).openScreen(GuiThemes.get());
+        }));
     }
 
     @Inject(method = "render", at = @At("TAIL"))

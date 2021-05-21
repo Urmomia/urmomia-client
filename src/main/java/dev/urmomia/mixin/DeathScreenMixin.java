@@ -1,12 +1,4 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.mixin;
-
-//Created by squidoodly 21/05/2020 :bruh:
-// Did squidoodly put his name on everything???
 
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.misc.BypassDeathScreen;
