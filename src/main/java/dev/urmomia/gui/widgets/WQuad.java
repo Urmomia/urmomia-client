@@ -1,8 +1,3 @@
-/*
-
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.gui.widgets;
 
 import dev.urmomia.utils.render.color.Color;

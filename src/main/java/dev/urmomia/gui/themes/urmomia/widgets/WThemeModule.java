@@ -70,7 +70,7 @@ public class WThemeModule extends WPressable implements ThemeWidget {
         animationProgress2 = Utils.clamp(animationProgress2, 0, 1);
 
         if (animationProgress1 > 0) {
-            renderer.quad(x +(f), y, width * animationProgress1, height, theme.moduleBackground.get());
+            renderer.quad(x +(f), y, (width - (f))* animationProgress1, height, theme.moduleBackground.get());
         }
         if (animationProgress2 > 0) {
             renderer.quad(x +(f), y + height * (1 - animationProgress2), theme.scale(2), height * animationProgress2, theme.accentColor.get());
@@ -95,7 +95,7 @@ public class WThemeModule extends WPressable implements ThemeWidget {
             case Horizontal:
             case Vertical:
             case Diagonal:
-            case Solid: f = theme.scale.get() * 2; break;
+            case Solid: f = 2; break;
         }
     }
 }
