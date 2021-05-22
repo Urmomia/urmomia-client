@@ -3,6 +3,7 @@ package dev.urmomia.gui;
 import dev.urmomia.MainClient;
 import dev.urmomia.gui.renderer.GuiDebugRenderer;
 import dev.urmomia.gui.renderer.GuiRenderer;
+import dev.urmomia.gui.screens.ModulesScreen;
 import dev.urmomia.gui.tabs.TabScreen;
 import dev.urmomia.gui.tabs.builtin.HudTab;
 import dev.urmomia.gui.utils.Cell;
@@ -63,7 +64,7 @@ public abstract class WidgetScreen extends Screen {
             animProgress = 1;
 
             if (this instanceof TabScreen && parent instanceof TabScreen && !(this instanceof HudTab.HudScreen)) {
-                if (Modules.get().get(HUD.class).isActive()) Modules.get().get(HUD.class).toggle();
+                Modules.get().get(HUD.class).toggle();
                 parent = ((TabScreen) parent).parent;
             }
         }

@@ -30,6 +30,7 @@ public class AutoEz extends Module {
     );
 
     private int timer;
+    private int said;
 
     private final Object2IntMap<UUID> totemPops = new Object2IntOpenHashMap<>();
     private final Object2IntMap<UUID> chatIds = new Object2IntOpenHashMap<>();
@@ -41,12 +42,14 @@ public class AutoEz extends Module {
     @Override
     public void onActivate() {
         timer = 0;
+        said = 0;
         totemPops.clear();
         chatIds.clear();
     }
 
     @EventHandler
     private void onGameJoin(GameJoinedEvent event) {
+        said = 0;
         totemPops.clear();
         chatIds.clear();
     }
@@ -79,11 +82,15 @@ public class AutoEz extends Module {
         synchronized (totemPops) {
             for (PlayerEntity player : mc.world.getPlayers()) {
                 if (!totemPops.containsKey(player.getUuid())) continue;
-                if (player.distanceTo(mc.player) < 4) continue;
+                if (player.distanceTo(mc.player) < 4) {
+                    said = 0;
+                    continue;
+                }
 
-                if (player.deathTime > 0 || player.getHealth() <= 0) {
+                if (said == 0 && player.deathTime > 0 || player.getHealth() <= 0) {
                     String fart = farte(ezed, player);
                     mc.player.sendChatMessage(fart);
+                    said = 1;
                     chatIds.removeInt(player.getUuid());
                 }
             }

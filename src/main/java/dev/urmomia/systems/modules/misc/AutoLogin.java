@@ -23,7 +23,7 @@ public class AutoLogin extends Module {
     private int ticks;
     private int d;
     private int joins;
-    private int said = 0;
+    private int said;
 
     private String passw;
 
@@ -66,7 +66,7 @@ public class AutoLogin extends Module {
     private void onTick(TickEvent.Post event) {
         for (; d == 1 && !(ticks >= 30);) {
             ticks++;
-            if (ticks >= 30) d = 0; break;
+            if (ticks >= 30) d = 0; said = 0; break;
         }
         //delay
         if (said == 0 && joins == 1 && d == 0 && ticks >= 30) mc.player.sendChatMessage("/login " + passw); said = 1;

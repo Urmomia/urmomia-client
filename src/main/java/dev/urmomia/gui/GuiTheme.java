@@ -52,6 +52,8 @@ public abstract class GuiTheme implements ISerializable<GuiTheme> {
 
     // Widgets
 
+    public abstract WWindow window(String title);
+
     public abstract WLabel label(String text, boolean title, double maxWidth);
     public WLabel label(String text, boolean title) {
         return label(text, title, 0);
@@ -131,8 +133,6 @@ public abstract class GuiTheme implements ISerializable<GuiTheme> {
     public abstract WAccount account(WidgetScreen screen, Account<?> account);
 
     public abstract WWidget module(Module module);
-
-    public abstract WWindow window(String title);
 
     public abstract WQuad quad(Color color);
 

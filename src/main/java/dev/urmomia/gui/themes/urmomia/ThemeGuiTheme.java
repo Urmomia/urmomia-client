@@ -183,6 +183,11 @@ public class ThemeGuiTheme extends GuiTheme {
     // Widgets
 
     @Override
+    public WWindow window(String title) {
+        return w(new WThemeWindow(title));
+    }
+
+    @Override
     public WLabel label(String text, boolean title, double maxWidth) {
         if (maxWidth == 0) return w(new WThemeLabel(text, title));
         return w(new WThemeMultiLabel(text, title, maxWidth));
@@ -266,11 +271,6 @@ public class ThemeGuiTheme extends GuiTheme {
     @Override
     public WWidget module(Module module) {
         return w(new WThemeModule(module));
-    }
-
-    @Override
-    public WWindow window(String title) {
-        return w(new WThemeWindow(title));
     }
 
     @Override
