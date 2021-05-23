@@ -61,19 +61,20 @@ public class DefaultSettingsWidgetFactory implements SettingsWidgetFactory {
     @Override
     public WWidget create(GuiTheme theme, Settings settings, String filter) {
         WVerticalList list = theme.verticalList();
+
         List<RemoveInfo> removeInfoList = new ArrayList<>();
 
         // Add all settings
         for (SettingGroup group : settings.groups) {
             group(list, group, filter, removeInfoList);
         }
+
         // Calculate width and set it as minimum width
         list.calculateSize();
         list.minWidth = list.width;
 
         // Remove hidden settings
         for (RemoveInfo removeInfo : removeInfoList) removeInfo.remove(list);
-
 
         return list;
     }
@@ -83,6 +84,7 @@ public class DefaultSettingsWidgetFactory implements SettingsWidgetFactory {
         section.action = () -> group.sectionExpanded = section.isExpanded();
 
         WTable table = section.add(theme.table()).expandX().widget();
+
         RemoveInfo removeInfo = null;
 
         for (Setting<?> setting : group) {
