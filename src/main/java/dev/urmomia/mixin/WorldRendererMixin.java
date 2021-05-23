@@ -1,22 +1,7 @@
 package dev.urmomia.mixin;
 
-import dev.urmomia.rendering.Blur;
-import dev.urmomia.systems.modules.Modules;
-import dev.urmomia.systems.modules.render.*;
-import dev.urmomia.systems.modules.world.Ambience;
-import dev.urmomia.utils.render.Outlines;
-import dev.urmomia.utils.render.color.Color;
-import dev.urmomia.utils.world.BlockUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Matrix4f;
-import org.spongepowered.asm.mixin.Final;
+import javax.annotation.Nullable;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,7 +10,35 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.annotation.Nullable;
+import dev.urmomia.rendering.Blur;
+import dev.urmomia.systems.modules.Modules;
+import dev.urmomia.systems.modules.render.BlockSelection;
+import dev.urmomia.systems.modules.render.BreakIndicators;
+import dev.urmomia.systems.modules.render.Chams;
+import dev.urmomia.systems.modules.render.ESP;
+import dev.urmomia.systems.modules.render.Freecam;
+import dev.urmomia.systems.modules.render.NoRender;
+import dev.urmomia.systems.modules.world.Ambience;
+import dev.urmomia.utils.render.Outlines;
+import dev.urmomia.utils.render.color.Color;
+import dev.urmomia.utils.world.BlockUtils;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.render.BlockBreakingInfo;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.Frustum;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Matrix4f;
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {

@@ -9,18 +9,18 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-public class MeteorButtonWidget extends AbstractPressableButtonWidget {
+public class ThemeButtonWidget extends AbstractPressableButtonWidget {
     public static final Identifier BUTTON_TEXTURE = new Identifier("urmomia-client", "textures/button.png");
 
-    public static final MeteorButtonWidget.TooltipSupplier EMPTY = (button, matrices, mouseX, mouseY) -> {};
-    protected final MeteorButtonWidget.PressAction onPress;
-    protected final MeteorButtonWidget.TooltipSupplier tooltipSupplier;
+    public static final ThemeButtonWidget.TooltipSupplier EMPTY = (button, matrices, mouseX, mouseY) -> {};
+    protected final ThemeButtonWidget.PressAction onPress;
+    protected final ThemeButtonWidget.TooltipSupplier tooltipSupplier;
 
-    public MeteorButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress) {
+    public ThemeButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress) {
         this(x, y, width, height, message, onPress, EMPTY);
     }
 
-    public MeteorButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress, TooltipSupplier tooltipSupplier) {
+    public ThemeButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress, TooltipSupplier tooltipSupplier) {
         super(x, y, width, height, message);
         this.onPress = onPress;
         this.tooltipSupplier = tooltipSupplier;
@@ -58,10 +58,10 @@ public class MeteorButtonWidget extends AbstractPressableButtonWidget {
     }
 
     public interface TooltipSupplier {
-        void onTooltip(MeteorButtonWidget button, MatrixStack matrices, int mouseX, int mouseY);
+        void onTooltip(ThemeButtonWidget button, MatrixStack matrices, int mouseX, int mouseY);
     }
 
     public interface PressAction {
-        void onPress(MeteorButtonWidget button);
+        void onPress(ThemeButtonWidget button);
     }
 }
