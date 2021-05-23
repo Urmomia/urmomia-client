@@ -4,6 +4,7 @@ import meteordevelopment.orbit.EventBus;
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.orbit.IEventBus;
 import dev.urmomia.events.game.GameLeftEvent;
+import dev.urmomia.events.meteor.CharTypedEvent;
 import dev.urmomia.events.meteor.ClientInitialisedEvent;
 import dev.urmomia.events.meteor.KeyEvent;
 import dev.urmomia.events.world.TickEvent;
@@ -16,6 +17,7 @@ import dev.urmomia.rendering.Matrices;
 import dev.urmomia.rendering.gl.PostProcessRenderer;
 import dev.urmomia.rendering.text.CustomTextRenderer;
 import dev.urmomia.systems.Systems;
+import dev.urmomia.systems.config.Config;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.misc.DiscordPresence;
@@ -37,6 +39,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import org.apache.logging.log4j.LogManager;
@@ -156,6 +159,17 @@ public class MainClient implements ClientModInitializer {
         // Click GUI
         if (event.action == KeyAction.Press && KeyBinds.OPEN_CLICK_GUI.matchesKey(event.key, 0)) {
             if (!Utils.canUpdate() && Utils.isWhitelistedScreen() || mc.currentScreen == null) openClickGui();
+        }
+    }
+
+    @EventHandler
+    private void onCharTyped(CharTypedEvent event) {
+        if (mc.currentScreen != null) return;
+        if (!Config.get().openChatOnPrefix) return;
+
+        if (event.c == Config.get().prefix.charAt(0)) {
+            mc.openScreen(new ChatScreen(Config.get().prefix));
+            event.cancel();
         }
     }
 }

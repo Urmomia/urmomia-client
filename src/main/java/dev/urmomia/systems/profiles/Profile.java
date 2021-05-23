@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.profiles;
 
 import dev.urmomia.systems.System;
@@ -26,9 +21,9 @@ import java.util.List;
 
 public class Profile implements ISerializable<Profile> {
 
-    public String name;
+    public String name = "";
     public boolean onLaunch = false;
-    public final List<String> loadOnJoinIps = new ArrayList<>();
+    public List<String> loadOnJoinIps = new ArrayList<>();
     public boolean accounts = false, config = true, friends = false, macros = true, modules = true, waypoints = false;
 
     public void load(System<?> system) {
@@ -119,6 +114,29 @@ public class Profile implements ISerializable<Profile> {
         }
 
         return this;
+    }
+
+    public Profile set(Profile profile) {
+        this.name = profile.name;
+
+        this.onLaunch = profile.onLaunch;
+        this.loadOnJoinIps = profile.loadOnJoinIps;
+
+        this.accounts = profile.accounts;
+        this.config = profile.config;
+        this.friends = profile.friends;
+        this.macros = profile.macros;
+        this.modules = profile.modules;
+        this.waypoints = profile.waypoints;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Profile profile = (Profile) o;
+        return name.equalsIgnoreCase(profile.name);
     }
 
 }

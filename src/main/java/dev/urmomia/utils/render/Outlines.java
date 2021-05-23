@@ -1,5 +1,6 @@
 package dev.urmomia.utils.render;
 
+import dev.urmomia.mixin.ShaderEffectAccessor;
 import dev.urmomia.mixin.WorldRendererAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
@@ -27,7 +28,7 @@ public class Outlines {
             }
 
             loadingOutlineShader = true;
-            outlinesShader = new ShaderEffect(mc.getTextureManager(), mc.getResourceManager(), mc.getFramebuffer(), new Identifier("urmomia-client", "shaders/post/my_entity_outline.json"));
+            outlinesShader = new ShaderEffect(mc.getTextureManager(), mc.getResourceManager(), mc.getFramebuffer(), new Identifier("meteor-client", "shaders/post/my_entity_outline.json"));
             outlinesShader.setupDimensions(mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight());
             outlinesFbo = outlinesShader.getSecondaryTarget("final");
             vertexConsumerProvider = new OutlineVertexConsumerProvider(mc.getBufferBuilders().getEntityVertexConsumers());
@@ -63,5 +64,9 @@ public class Outlines {
 
     public static void onResized(int width, int height) {
         if (outlinesShader != null) outlinesShader.setupDimensions(width, height);
+    }
+
+    public static void setUniform(String name, float value) {
+        ((ShaderEffectAccessor) outlinesShader).getPasses().get(0).getProgram().getUniformByName(name).set(value);
     }
 }

@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.commands.commands;
 
 import com.mojang.brigadier.StringReader;
@@ -41,7 +36,7 @@ public class ProfileCommand extends Command {
 
                     if (profile != null) {
                         profile.load();
-                        ChatUtils.prefixInfo("Profiles","Loaded profile (highlight)%s(default).", profile.name);
+                        info("Loaded profile (highlight)%s(default).", profile.name);
                     }
 
                     return SINGLE_SUCCESS;
@@ -51,7 +46,7 @@ public class ProfileCommand extends Command {
 
                     if (profile != null) {
                         profile.save();
-                        ChatUtils.prefixInfo("Profiles","Saved profile (highlight)%s(default).", profile.name);
+                        info("Saved profile (highlight)%s(default).", profile.name);
                     }
 
                     return SINGLE_SUCCESS;
@@ -61,7 +56,7 @@ public class ProfileCommand extends Command {
 
                     if (profile != null) {
                         Profiles.get().remove(profile);
-                        ChatUtils.prefixInfo("Profiles","Deleted profile (highlight)%s(default).", profile.name);
+                        info("Deleted profile (highlight)%s(default).", profile.name);
                     }
 
                     return SINGLE_SUCCESS;

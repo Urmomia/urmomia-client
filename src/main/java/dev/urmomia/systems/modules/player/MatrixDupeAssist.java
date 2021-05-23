@@ -79,11 +79,11 @@ public class MatrixDupeAssist extends Module {
             }
 
         if (openInventory.get() && !(InvUtils.findItemInHotbar(Items.WHITE_CARPET) != -1)) {
-            ChatUtils.moduleError(this, "No white carpet was found in hotbar, please disable 'Inventory' option.");
+            error("No white carpet was found in hotbar, please disable 'Inventory' option.");
             toggle();
         }
         else if (mc.player.hasVehicle() && !(mc.player.getVehicle() instanceof LlamaEntity)) {
-            ChatUtils.moduleError(this, "The entity you're riding isn't a Llama.");
+            error("The entity you're riding isn't a Llama.");
             mc.player.closeHandledScreen();
             mc.player.networkHandler.sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.PRESS_SHIFT_KEY));
             mc.player.setSneaking(true);

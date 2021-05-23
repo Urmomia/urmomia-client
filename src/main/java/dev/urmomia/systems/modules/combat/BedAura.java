@@ -11,6 +11,7 @@ import dev.urmomia.systems.modules.Module;
 import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.entity.EntityUtils;
 import dev.urmomia.utils.entity.SortPriority;
+import dev.urmomia.utils.entity.TargetUtils;
 import dev.urmomia.utils.player.*;
 import dev.urmomia.utils.render.color.SettingColor;
 import dev.urmomia.utils.world.BlockUtils;
@@ -47,6 +48,7 @@ public class BedAura extends Module {
             .name("place-mode")
             .description("The way beds are allowed to be placed near you.")
             .defaultValue(Safety.Safe)
+            .visible(place::get)
             .build()
     );
 
@@ -56,6 +58,7 @@ public class BedAura extends Module {
             .defaultValue(9)
             .min(0)
             .sliderMax(20)
+            .visible(place::get)
             .build()
     );
 
@@ -140,6 +143,7 @@ public class BedAura extends Module {
             .sliderMin(1)
             .max(9)
             .sliderMax(9)
+            .visible(autoMove::get)
             .build()
     );
 
@@ -246,7 +250,7 @@ public class BedAura extends Module {
     @EventHandler
     private void onTick(TickEvent.Post event) {
         if (mc.world.getDimension().isBedWorking()) {
-            ChatUtils.moduleError(this, "You are in the Overworld... disabling!");
+            error("You are in the Overworld... disabling!");
             toggle();
             return;
         }
@@ -254,7 +258,7 @@ public class BedAura extends Module {
         if (PlayerUtils.shouldPause(pauseOnMine.get(), pauseOnEat.get(), pauseOnDrink.get())) return;
         if (EntityUtils.getTotalHealth(mc.player) <= minHealth.get()) return;
 
-        target = EntityUtils.getPlayerTarget(targetRange.get(), priority.get(), false);
+        target = TargetUtils.getPlayerTarget(targetRange.get(), priority.get());
 
         if (target == null) {
             bestPos = null;
@@ -383,7 +387,7 @@ public class BedAura extends Module {
 
     private void doAutoMove() {
         if (InvUtils.findItemInHotbar(itemStack -> itemStack.getItem() instanceof BedItem) == -1) {
-            int slot = InvUtils.findItemInMain(itemStack -> itemStack.getItem() instanceof BedItem);
+            int slot = InvUtils.findItemInInventory(itemStack -> itemStack.getItem() instanceof BedItem);
             InvUtils.move().from(slot).toHotbar(autoMoveSlot.get() - 1);
         }
     }

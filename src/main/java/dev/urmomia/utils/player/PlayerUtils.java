@@ -9,7 +9,8 @@ import dev.urmomia.systems.modules.movement.NoFall;
 import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.entity.EntityUtils;
 import dev.urmomia.utils.misc.BaritoneUtils;
-import dev.urmomia.utils.misc.Vector2;
+import dev.urmomia.utils.misc.text.TextUtils;
+import dev.urmomia.utils.render.color.Color;
 import dev.urmomia.utils.world.BlockUtils;
 import dev.urmomia.utils.world.Dimension;
 import net.minecraft.block.BlockState;
@@ -17,6 +18,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,7 +32,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.RaycastContext;
+
+import static dev.urmomia.utils.Utils.WHITE;
 
 public class PlayerUtils {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
@@ -38,6 +43,14 @@ public class PlayerUtils {
 
     private static final double diagonal = 1 / Math.sqrt(2);
     private static final Vec3d horizontalVelocity = new Vec3d(0, 0, 0);
+
+    private static final Color color = new Color();
+
+    public static Color getPlayerColor(PlayerEntity entity, Color defaultColor) {
+        if (Friends.get().isFriend(entity)) return color.set(Friends.get().color).a(defaultColor.a);
+        if (!color.set(TextUtils.getMostPopularColor(entity.getDisplayName())).equals(WHITE)) return color.set(color).a(defaultColor.a);
+        return defaultColor;
+    }
 
     public static boolean placeBlock(BlockPos blockPos, Hand hand) {
         return placeBlock(blockPos, hand, true);
@@ -182,40 +195,6 @@ public class PlayerUtils {
         return mc.player.isSprinting() && (mc.player.forwardSpeed != 0 || mc.player.sidewaysSpeed != 0);
     }
 
-    public static Vector2 transformStrafe(double speed) {
-        float forward = mc.player.input.movementForward;
-        float side = mc.player.input.movementSideways;
-        float yaw = mc.player.prevYaw + (mc.player.yaw - mc.player.prevYaw) * mc.getTickDelta();
-
-        double velX, velZ;
-
-        if (forward == 0.0f && side == 0.0f) return new Vector2(0, 0);
-
-        else if (forward != 0.0f) {
-            if (side >= 1.0f) {
-                yaw += (float) (forward > 0.0f ? -45 : 45);
-                side = 0.0f;
-            } else if (side <= -1.0f) {
-                yaw += (float) (forward > 0.0f ? 45 : -45);
-                side = 0.0f;
-            }
-
-            if (forward > 0.0f)
-                forward = 1.0f;
-
-            else if (forward < 0.0f)
-                forward = -1.0f;
-        }
-
-        double mx = Math.cos(Math.toRadians(yaw + 90.0f));
-        double mz = Math.sin(Math.toRadians(yaw + 90.0f));
-
-        velX = (double) forward * speed * mx + (double) side * speed * mz;
-        velZ = (double) forward * speed * mz - (double) side * speed * mx;
-
-        return new Vector2(velX, velZ);
-    }
-
     public static boolean isInHole(boolean doubles) {
         if (!Utils.canUpdate()) return false;
 
@@ -251,45 +230,94 @@ public class PlayerUtils {
         return possibleHealthReductions(true, true);
     }
 
-    public static double possibleHealthReductions(boolean explosions, boolean fall) {
+    public static double possibleHealthReductions(boolean entities, boolean fall) {
         double damageTaken = 0;
 
-        for (Entity entity : mc.world.getEntities()) {
-            // Check for end crystals
-            if (entity instanceof EndCrystalEntity && damageTaken < DamageCalcUtils.crystalDamage(mc.player, entity.getPos())) {
-                damageTaken = DamageCalcUtils.crystalDamage(mc.player, entity.getPos());
+        if (entities) {
+            for (Entity entity : mc.world.getEntities()) {
+                // Check for end crystals
+                if (entity instanceof EndCrystalEntity && damageTaken < DamageCalcUtils.crystalDamage(mc.player, entity.getPos())) {
+                    damageTaken = DamageCalcUtils.crystalDamage(mc.player, entity.getPos());
+                }
+                // Check for players holding swords
+                else if (entity instanceof PlayerEntity && damageTaken < DamageCalcUtils.getSwordDamage((PlayerEntity) entity, true)) {
+                    if (!Friends.get().isFriend((PlayerEntity) entity) && mc.player.getPos().distanceTo(entity.getPos()) < 5) {
+                        if (((PlayerEntity) entity).getActiveItem().getItem() instanceof SwordItem) {
+                            damageTaken = DamageCalcUtils.getSwordDamage((PlayerEntity) entity, true);
+                        }
+                    }
+                }
             }
-            // Check for players holding swords
-            else if (entity instanceof PlayerEntity && damageTaken < DamageCalcUtils.getSwordDamage((PlayerEntity) entity, true)) {
-                if (Friends.get().notTrusted((PlayerEntity) entity) && mc.player.getPos().distanceTo(entity.getPos()) < 5) {
-                    if (((PlayerEntity) entity).getActiveItem().getItem() instanceof SwordItem) {
-                        damageTaken = DamageCalcUtils.getSwordDamage((PlayerEntity) entity, true);
+
+            // Check for beds if in nether
+            if (PlayerUtils.getDimension() != Dimension.Overworld) {
+                for (BlockEntity blockEntity : mc.world.blockEntities) {
+                    BlockPos bp = blockEntity.getPos();
+                    Vec3d pos = new Vec3d(bp.getX(), bp.getY(), bp.getZ());
+
+                    if (blockEntity instanceof BedBlockEntity && damageTaken < DamageCalcUtils.bedDamage(mc.player, pos)) {
+                        damageTaken = DamageCalcUtils.bedDamage(mc.player, pos);
                     }
                 }
             }
         }
 
-        // Check for beds if in nether
-        if (Utils.getDimension() != Dimension.Overworld) {
-            for (BlockEntity blockEntity : mc.world.blockEntities) {
-                BlockPos bp = blockEntity.getPos();
-                Vec3d pos = new Vec3d(bp.getX(), bp.getY(), bp.getZ());
+        // Check for fall distance with water check
+        if (fall) {
+            if (!Modules.get().isActive(NoFall.class) && mc.player.fallDistance > 3) {
+                double damage = mc.player.fallDistance * 0.5;
 
-                if (blockEntity instanceof BedBlockEntity && damageTaken < DamageCalcUtils.bedDamage(mc.player, pos)) {
-                    damageTaken = DamageCalcUtils.bedDamage(mc.player, pos);
+                if (damage > damageTaken && !EntityUtils.isAboveWater(mc.player)) {
+                    damageTaken = damage;
                 }
             }
         }
 
-        // Check for fall distance with water check
-        if (!Modules.get().isActive(NoFall.class) && mc.player.fallDistance > 3) {
-            double damage = mc.player.fallDistance * 0.5;
-
-            if (damage > damageTaken && !EntityUtils.isAboveWater(mc.player)) {
-                damageTaken = damage;
-            }
-        }
-
         return damageTaken;
+    }
+
+    public static double distanceTo(Entity entity) {
+        return distanceTo(entity.getX(), entity.getY(), entity.getZ());
+    }
+
+    public static double distanceTo(BlockPos blockPos) {
+        return distanceTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+    }
+
+    public static double distanceTo(Vec3d vec3d) {
+        return distanceTo(vec3d.getX(), vec3d.getY(), vec3d.getZ());
+    }
+
+    public static double distanceTo(double x, double y, double z) {
+        float f = (float) (mc.player.getX() - x);
+        float g = (float) (mc.player.getY() - y);
+        float h = (float) (mc.player.getZ() - z);
+        return MathHelper.sqrt(f * f + g * g + h * h);
+    }
+
+    public static Dimension getDimension() {
+        switch (MinecraftClient.getInstance().world.getRegistryKey().getValue().getPath()) {
+            case "the_nether": return Dimension.Nether;
+            case "the_end":    return Dimension.End;
+            default:           return Dimension.Overworld;
+        }
+    }
+
+    public static GameMode getGameMode() {
+        PlayerListEntry playerListEntry = mc.getNetworkHandler().getPlayerListEntry(mc.player.getUuid());
+        if (playerListEntry == null) return GameMode.NOT_SET;
+        return playerListEntry.getGameMode();
+    }
+
+    public static double getTotalHealth() {
+        return mc.player.getHealth() + mc.player.getAbsorptionAmount();
+    }
+
+    public static int getPing() {
+        if (mc.getNetworkHandler() == null) return 0;
+
+        PlayerListEntry playerListEntry = mc.getNetworkHandler().getPlayerListEntry(mc.player.getUuid());
+        if (playerListEntry == null) return 0;
+        return playerListEntry.getLatency();
     }
 }

@@ -1,9 +1,21 @@
 package dev.urmomia.gui;
 
+import static dev.urmomia.utils.Utils.getWindowHeight;
+import static dev.urmomia.utils.Utils.getWindowWidth;
+import static dev.urmomia.utils.Utils.mc;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_9;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_ENTER;
+import static org.lwjgl.glfw.GLFW.GLFW_MOD_CONTROL;
+import static org.lwjgl.glfw.GLFW.GLFW_MOD_SUPER;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import dev.urmomia.MainClient;
 import dev.urmomia.gui.renderer.GuiDebugRenderer;
 import dev.urmomia.gui.renderer.GuiRenderer;
-import dev.urmomia.gui.screens.ModulesScreen;
 import dev.urmomia.gui.tabs.TabScreen;
 import dev.urmomia.gui.tabs.builtin.HudTab;
 import dev.urmomia.gui.utils.Cell;
@@ -22,18 +34,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-import static dev.urmomia.utils.Utils.*;
-import static org.lwjgl.glfw.GLFW.*;
-
 public abstract class WidgetScreen extends Screen {
     private static final GuiRenderer RENDERER = new GuiRenderer();
     private static final GuiDebugRenderer DEBUG_RENDERER = new GuiDebugRenderer();
 
     public Runnable taskAfterRender;
+    protected Runnable enterAction;
 
     protected Screen parent;
     private final WContainer root;
@@ -145,6 +151,11 @@ public abstract class WidgetScreen extends Screen {
 
         if ((modifiers == GLFW_MOD_CONTROL || modifiers == GLFW_MOD_SUPER) && keyCode == GLFW_KEY_9) {
             debug = !debug;
+            return true;
+        }
+
+        if ((keyCode == GLFW_KEY_ENTER || keyCode == GLFW_KEY_KP_ENTER) && enterAction != null) {
+            enterAction.run();
             return true;
         }
 

@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.player;
 
 import dev.urmomia.gui.GuiTheme;
@@ -12,8 +7,7 @@ import dev.urmomia.gui.widgets.pressable.WButton;
 import dev.urmomia.settings.*;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.entity.FakePlayerEntity;
-import dev.urmomia.utils.entity.FakePlayerUtils;
+import dev.urmomia.utils.entity.fakeplayer.FakePlayerManager;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class FakePlayer extends Module {
@@ -22,20 +16,13 @@ public class FakePlayer extends Module {
     public final Setting<String> name = sgGeneral.add(new StringSetting.Builder()
             .name("name")
             .description("The name of the fake player.")
-            .defaultValue("seasnail8169")
+            .defaultValue("_sowl")
             .build()
     );
 
     public final Setting<Boolean> copyInv = sgGeneral.add(new BoolSetting.Builder()
             .name("copy-inv")
             .description("Copies your exact inventory to the fake player.")
-            .defaultValue(true)
-            .build()
-    );
-
-    public final Setting<Boolean> glowing = sgGeneral.add(new BoolSetting.Builder()
-            .name("glowing")
-            .description("Grants the fake player a glowing effect.")
             .defaultValue(true)
             .build()
     );
@@ -49,26 +36,18 @@ public class FakePlayer extends Module {
             .build()
     );
 
-    public final Setting<Boolean> idInNametag = sgGeneral.add(new BoolSetting.Builder()
-            .name("iD-in-nametag")
-            .description("Displays the fake player's ID inside its nametag.")
-            .defaultValue(true)
-            .build()
-    );
-
     public FakePlayer() {
         super(Categories.Player, "fake-player", "Spawns a client-side fake player for testing usages.");
     }
 
     @Override
     public void onActivate() {
-        FakePlayerUtils.ID = 0;
+        FakePlayerManager.clear();
     }
 
     @Override
     public void onDeactivate() {
-        FakePlayerUtils.ID = 0;
-        FakePlayerUtils.clearFakePlayers();
+        FakePlayerManager.clear();
     }
 
     @Override
@@ -76,21 +55,21 @@ public class FakePlayer extends Module {
         WHorizontalList w = theme.horizontalList();
 
         WButton spawn = w.add(theme.button("Spawn")).widget();
-        spawn.action = FakePlayerUtils::spawnFakePlayer;
+        spawn.action = () -> {
+            if (isActive()) FakePlayerManager.add(name.get(), health.get(), copyInv.get());
+        };
 
         WButton clear = w.add(theme.button("Clear")).widget();
-        clear.action = FakePlayerUtils::clearFakePlayers;
+        clear.action = () -> {
+            if (isActive()) FakePlayerManager.clear();
+        };
 
         return w;
     }
 
-    public boolean showID(PlayerEntity entity) {
-        return isActive() && idInNametag.get() && entity instanceof FakePlayerEntity;
-    }
-
     @Override
     public String getInfoString() {
-        if (FakePlayerUtils.getPlayers() != null) return String.valueOf(FakePlayerUtils.getPlayers().size());
+        if (FakePlayerManager.getPlayers() != null) return String.valueOf(FakePlayerManager.getPlayers().size());
         return null;
     }
 }

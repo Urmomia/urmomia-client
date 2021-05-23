@@ -1,11 +1,4 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.player;
-
-//Created by squidoodly 06/07/2020
 
 import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.entity.player.FinishUsingItem;
@@ -90,7 +83,7 @@ public class MiddleClickExtra extends Module {
         InvUtils.FindItemResult result = InvUtils.findItemWithCount(mode.get().item);
 
         if (result.slot == -1 || result.slot > 8) {
-            if (notify.get()) ChatUtils.moduleWarning(this, "Unable to find specified item.");
+            if (notify.get()) warning("Unable to find specified item.");
             return;
         }
 

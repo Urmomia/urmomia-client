@@ -1,12 +1,8 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules;
 
+import java.util.Objects;
+
 import dev.urmomia.MainClient;
-import dev.urmomia.events.meteor.ModuleVisibilityChangedEvent;
 import dev.urmomia.gui.GuiTheme;
 import dev.urmomia.gui.widgets.WWidget;
 import dev.urmomia.settings.Settings;
@@ -19,9 +15,8 @@ import dev.urmomia.utils.render.color.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
-import java.util.Objects;
 
 public abstract class Module implements ISerializable<Module> {
     protected final MinecraftClient mc;
@@ -55,40 +50,66 @@ public abstract class Module implements ISerializable<Module> {
         return null;
     }
 
-    public void doAction(boolean onActivateDeactivate) {
-        toggle(onActivateDeactivate);
-    }
-    public void doAction() {
-        doAction(true);
-    }
-
     public void onActivate() {}
     public void onDeactivate() {}
 
-    public void toggle(boolean onActivateDeactivate) {
+    public void toggle(boolean onToggle) {
         if (!active) {
             active = true;
             Modules.get().addActive(this);
 
             settings.onActivated();
 
-            if (onActivateDeactivate) {
+            if (onToggle) {
                 MainClient.EVENT_BUS.subscribe(this);
                 onActivate();
             }
         }
         else {
-            active = false;
-            Modules.get().removeActive(this);
-
-            if (onActivateDeactivate) {
+            if (onToggle) {
                 MainClient.EVENT_BUS.unsubscribe(this);
                 onDeactivate();
             }
+
+            active = false;
+            Modules.get().removeActive(this);
         }
     }
+
     public void toggle() {
         toggle(true);
+    }
+
+    public void sendToggledMsg() {
+        if (Config.get().chatCommandsInfo) ChatUtils.sendMsg(this.hashCode(), Formatting.GRAY, "Toggled (highlight)%s(default) %s(default).", title, isActive() ? Formatting.GREEN + "on" : Formatting.RED + "off");
+    }
+
+    public void info(Text message) {
+        ChatUtils.sendMsg(title, message);
+    }
+
+    public void info(String message, Object... args) {
+        ChatUtils.info(title, message, args);
+    }
+
+    public void warning(String message, Object... args) {
+        ChatUtils.warning(title, message, args);
+    }
+
+    public void error(String message, Object... args) {
+        ChatUtils.error(title, message, args);
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public String getInfoString() {
@@ -128,23 +149,6 @@ public abstract class Module implements ISerializable<Module> {
         setVisible(tag.getBoolean("visible"));
 
         return this;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-        MainClient.EVENT_BUS.post(ModuleVisibilityChangedEvent.get(this));
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void sendToggledMsg() {
-        if (Config.get().chatCommandsInfo) ChatUtils.info(42069, "Toggled (highlight)%s(default) %s(default).", title, isActive() ? Formatting.GREEN + "on" : Formatting.RED + "off");
     }
 
     @Override

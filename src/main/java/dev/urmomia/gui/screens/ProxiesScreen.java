@@ -164,6 +164,8 @@ public class ProxiesScreen extends WindowScreen {
                     onClose();
                 }
             };
+            
+            enterAction = addSave.action;
         }
     }
 }

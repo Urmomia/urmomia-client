@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.commands.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -26,7 +21,7 @@ public class ModulesCommand extends Command {
     @Override
     public void build(LiteralArgumentBuilder<CommandSource> builder) {
         builder.executes(context -> {
-            ChatUtils.info("--- All (highlight)%d(default) Modules ---", Modules.get().getCount());
+            ChatUtils.info("--- Modules (highlight)%d(default) ---", Modules.get().getCount());
 
             BaseText modules = new LiteralText("");
 
@@ -44,7 +39,7 @@ public class ModulesCommand extends Command {
                 modules.append(finalModule);
             }
 
-            ChatUtils.info(modules);
+            ChatUtils.sendMsg(modules);
 
             return SINGLE_SUCCESS;
         });

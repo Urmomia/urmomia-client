@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import meteordevelopment.orbit.EventHandler;
@@ -100,7 +95,7 @@ public class Quiver extends Module {
         int bowSlot = findBow();
 
         if (bowSlot == -1) {
-            if (chatInfo.get()) ChatUtils.moduleError(this, "No bow found... disabling.");
+            if (chatInfo.get()) error("No bow found... disabling.");
             toggle();
             return;
         } else mc.player.inventory.selectedSlot = bowSlot;
@@ -120,7 +115,7 @@ public class Quiver extends Module {
         if (speedSlot != -1) arrowsToShoot++;
 
         if (arrowsToShoot == 0) {
-            if (chatInfo.get()) ChatUtils.moduleError(this, "No appropriate arrows found... disabling.");
+            if (chatInfo.get()) error("No appropriate arrows found... disabling.");
             toggle();
             return;
         }
@@ -149,7 +144,7 @@ public class Quiver extends Module {
         }
 
         if (shotStrength && shotSpeed && canStop) {
-            if (chatInfo.get()) ChatUtils.moduleInfo(this, "Quiver complete... disabling.");
+            if (chatInfo.get()) info("Quiver complete... disabling.");
             toggle();
             return;
         }
@@ -158,14 +153,14 @@ public class Quiver extends Module {
             if (!shooting && !shotStrength && foundStrength) {
                 shoot(strengthSlot);
                 shootingArrow = ArrowType.Strength;
-                if (chatInfo.get()) ChatUtils.moduleInfo(this, "Quivering a strength arrow.");
+                if (chatInfo.get()) info("Quivering a strength arrow.");
                 shotStrength = true;
             }
 
             if (!shooting && !shotSpeed && foundSpeed && shotStrength) {
                 shoot(speedSlot);
                 shootingArrow = ArrowType.Speed;
-                if (chatInfo.get()) ChatUtils.moduleInfo(this, "Quivering a speed arrow.");
+                if (chatInfo.get()) info("Quivering a speed arrow.");
                 shotSpeed = true;
             }
         }

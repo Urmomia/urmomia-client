@@ -1,36 +1,39 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import baritone.api.BaritoneAPI;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.entity.player.StartBreakingBlockEvent;
-import dev.urmomia.events.packets.PacketEvent;
 import dev.urmomia.events.render.RenderEvent;
 import dev.urmomia.events.world.TickEvent;
-import dev.urmomia.settings.*;
+import dev.urmomia.settings.BoolSetting;
+import dev.urmomia.settings.DoubleSetting;
+import dev.urmomia.settings.EntityTypeListSetting;
+import dev.urmomia.settings.EnumSetting;
+import dev.urmomia.settings.Setting;
+import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.friends.Friends;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.utils.Utils;
-import dev.urmomia.utils.entity.EntityUtils;
 import dev.urmomia.utils.entity.SortPriority;
 import dev.urmomia.utils.entity.Target;
+import dev.urmomia.utils.entity.TargetUtils;
 import dev.urmomia.utils.misc.Vec3;
 import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.player.PlayerUtils;
 import dev.urmomia.utils.player.Rotations;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.BowItem;
+import net.minecraft.item.CrossbowItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.item.SwordItem;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 
@@ -112,14 +115,7 @@ public class Aimbot extends Module {
             .defaultValue(Utils.asObject2BooleanOpenHashMap(EntityType.PLAYER))
             .build()
     );
-
-    private final Setting<Boolean> friends = sgEntities.add(new BoolSetting.Builder()
-            .name("friends")
-            .description("Whether or not to aim at friends.")
-            .defaultValue(false)
-            .build()
-    );
-
+    
     private final Setting<Boolean> babies = sgEntities.add(new BoolSetting.Builder()
             .name("babies")
             .description("Whether or not to attack baby variants of the entity.")
@@ -216,16 +212,16 @@ public class Aimbot extends Module {
     }
 
     private Entity getEntity(double range) {
-        return EntityUtils.get(entity -> {
+        return TargetUtils.get(entity -> {
             if (entity == mc.player || entity == mc.cameraEntity) return false;
             if (entity.distanceTo(mc.player) > range) return false;
             if ((entity instanceof LivingEntity && ((LivingEntity) entity).isDead()) || !entity.isAlive()) return false;
             if (!entities.get().getBoolean(entity.getType())) return false;
             if (!nametagged.get() && entity.hasCustomName()) return false;
             if (!PlayerUtils.canSeeEntity(entity)) return false;
+
             if (entity instanceof PlayerEntity) {
-                if (((PlayerEntity) entity).isCreative()) return false;
-                if (!friends.get() && !Friends.get().attack((PlayerEntity) entity)) return false;
+                return Friends.get().shouldAttack((PlayerEntity) entity);
             }
             return !(entity instanceof AnimalEntity) || babies.get() || !((AnimalEntity) entity).isBaby();
         }, priority.get());

@@ -2,20 +2,23 @@ package dev.urmomia.systems.modules.render.hud.modules;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.urmomia.rendering.DrawMode;
+import dev.urmomia.rendering.Matrices;
 import dev.urmomia.rendering.Renderer;
 import dev.urmomia.rendering.text.TextRenderer;
 import dev.urmomia.settings.*;
-import dev.urmomia.systems.friends.Friend;
 import dev.urmomia.systems.friends.Friends;
 import dev.urmomia.systems.modules.render.hud.HUD;
 import dev.urmomia.systems.modules.render.hud.HudRenderer;
 import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.entity.EntityUtils;
 import dev.urmomia.utils.entity.SortPriority;
+import dev.urmomia.utils.entity.TargetUtils;
 import dev.urmomia.utils.misc.FakeClientPlayer;
+import dev.urmomia.utils.player.PlayerUtils;
 import dev.urmomia.utils.render.RenderUtils;
 import dev.urmomia.utils.render.color.Color;
 import dev.urmomia.utils.render.color.SettingColor;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.enchantment.Enchantment;
@@ -25,12 +28,9 @@ import net.minecraft.item.BedItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SwordItem;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
-
-import net.minecraft.client.gui.DrawableHelper;
-import dev.urmomia.rendering.Matrices;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -202,7 +202,7 @@ public class CombatHud extends HudElement {
             double y = box.getY();
 
             if (isInEditor()) playerEntity = FakeClientPlayer.getPlayer();
-            else playerEntity = EntityUtils.getPlayerTarget(range.get(), SortPriority.LowestDistance, ignoreFriends.get());
+            else playerEntity = TargetUtils.getPlayerTarget(range.get(), SortPriority.LowestDistance);
 
             if (playerEntity == null) return;
 
@@ -227,7 +227,7 @@ public class CombatHud extends HudElement {
 
             // Name
             String nameText = playerEntity.getGameProfile().getName();
-            Color nameColor = Friends.get().getFriendColor(playerEntity);
+            Color nameColor = PlayerUtils.getPlayerColor(playerEntity, hud.primaryColor.get());
 
             // Ping
             int ping = EntityUtils.getPing(playerEntity);
@@ -252,10 +252,10 @@ public class CombatHud extends HudElement {
             String friendText = "Unknown";
 
             Color friendColor = hud.primaryColor.get();
-            if (Friends.get().get(playerEntity) != null) {
-                Friend player = Friends.get().get(playerEntity);
-                friendText = player.type.name();
-                friendColor = Friends.get().getFriendColor(playerEntity);
+
+            if (Friends.get().isFriend(playerEntity)) {
+                friendText = "Friend";
+                friendColor = Friends.get().color;
             } else {
                 boolean naked = true;
 
@@ -275,8 +275,8 @@ public class CombatHud extends HudElement {
                     for (int position = 5; position >= 0; position--) {
                         ItemStack itemStack = getItem(position);
 
-                        if (itemStack.getItem() == Items.END_CRYSTAL
-                                || itemStack.getItem() instanceof SwordItem
+                        if (itemStack.getItem() instanceof SwordItem
+                                || itemStack.getItem() == Items.END_CRYSTAL
                                 || itemStack.getItem() == Items.RESPAWN_ANCHOR
                                 || itemStack.getItem() instanceof BedItem) threat = true;
                     }

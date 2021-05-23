@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.render;
 
 import baritone.api.BaritoneAPI;
@@ -247,12 +242,12 @@ public class WaypointsModule extends Module {
             table.row();
 
             // Save
-            table.add(theme.button("Save")).expandX().widget().action = () -> {
-                if (newWaypoint) Waypoints.get().add(waypoint);
-                else Waypoints.get().save();
-
+            WButton save = table.add(theme.button("Save")).expandX().widget();
+            save.action = () -> {
                 onClose();
             };
+            
+            enterAction = save.action;
         }
 
         @Override

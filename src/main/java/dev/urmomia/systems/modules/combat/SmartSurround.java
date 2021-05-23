@@ -1,11 +1,4 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
-
-//Created by squidoodly 15/04/2020
 
 import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.entity.EntityAddedEvent;
@@ -72,7 +65,7 @@ public class SmartSurround extends Module {
                 slot = findObiInHotbar();
 
                 if (slot == -1 && onlyObsidian.get()) {
-                    ChatUtils.moduleError(this, "No obsidian in hotbar... disabling.");
+                    error("No obsidian in hotbar... disabling.");
                     return;
                 }
 
@@ -87,7 +80,7 @@ public class SmartSurround extends Module {
                 }
 
                 if (slot == -1) {
-                    ChatUtils.moduleError(this, "No blocks in hotbar... disabling.");
+                    error("No blocks in hotbar... disabling.");
                     return;
                 }
 

@@ -1,27 +1,27 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.world.TickEvent;
+import dev.urmomia.settings.BlockListSetting;
 import dev.urmomia.settings.BoolSetting;
 import dev.urmomia.settings.Setting;
 import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
+import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.player.PlayerUtils;
 import dev.urmomia.utils.world.BlockUtils;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Surround extends Module {
+    
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<Boolean> doubleHeight = sgGeneral.add(new BoolSetting.Builder()
@@ -79,11 +79,12 @@ public class Surround extends Module {
             .defaultValue(true)
             .build()
     );
-
-    private final Setting<Boolean> useEnderChests = sgGeneral.add(new BoolSetting.Builder()
-            .name("use-ender-chests")
-            .description("Will surround with ender chests if they are found in your hotbar.")
-            .defaultValue(false)
+    
+    private final Setting<List<Block>> blocks = sgGeneral.add(new BlockListSetting.Builder()
+            .name("block")
+            .description("What blocks to use for surround.")
+            .defaultValue(Collections.singletonList(Blocks.OBSIDIAN))
+            .filter(this::blockFilter)
             .build()
     );
 
@@ -147,7 +148,13 @@ public class Surround extends Module {
             if (doubleHeightPlaced || !doubleHeight.get()) toggle();
         }
     }
-
+    
+    private boolean blockFilter(Block block) {
+        return block == Blocks.OBSIDIAN ||
+                block == Blocks.ENDER_CHEST ||
+                block == Blocks.RESPAWN_ANCHOR;
+    }
+    
     private boolean place(int x, int y, int z) {
         setBlockPos(x, y, z);
         BlockState blockState = mc.world.getBlockState(blockPos);
@@ -167,16 +174,6 @@ public class Surround extends Module {
     }
 
     private int findSlot() {
-        for (int i = 0; i < 9; i++) {
-            Item item = mc.player.inventory.getStack(i).getItem();
-
-            if (!(item instanceof BlockItem)) continue;
-
-            if (item == Items.OBSIDIAN || (item == Items.ENDER_CHEST && useEnderChests.get())) {
-                return i;
-            }
-        }
-
-        return -1;
+        return InvUtils.findItemInHotbar(itemStack -> blocks.get().contains(Block.getBlockFromItem(itemStack.getItem())));
     }
 }

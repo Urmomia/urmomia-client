@@ -53,7 +53,7 @@ public class WThemeModule extends WPressable implements ThemeWidget {
 
     @Override
     protected void onPressed(int button) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT) module.doAction(Utils.canUpdate());
+        if (button == GLFW_MOUSE_BUTTON_LEFT) module.toggle(Utils.canUpdate());
         else if (button == GLFW_MOUSE_BUTTON_RIGHT) mc.openScreen(theme.moduleScreen(module));
     }
 

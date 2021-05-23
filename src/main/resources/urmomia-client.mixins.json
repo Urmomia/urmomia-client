@@ -110,6 +110,7 @@
     "RenderLayersMixin",
     "RenderTickCounterMixin",
     "ScreenMixin",
+    "ShaderEffectAccessor",
     "ShovelItemAccessor",
     "ShulkerBoxBlockMixin",
     "ShulkerBoxScreenMixin",

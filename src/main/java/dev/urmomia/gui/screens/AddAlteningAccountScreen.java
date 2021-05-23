@@ -26,5 +26,8 @@ public class AddAlteningAccountScreen extends WindowScreen {
                 AccountsScreen.addAccount(add, this, new TheAlteningAccount(token.get()));
             }
         };
+        
+        enterAction = add.action;
     }
+    
 }

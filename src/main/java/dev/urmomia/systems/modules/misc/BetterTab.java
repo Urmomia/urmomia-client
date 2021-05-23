@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.misc;
 
 import dev.urmomia.settings.*;
@@ -85,7 +80,7 @@ public class BetterTab extends Module {
         }
         else if (friends.get() && Friends.get().get(playerListEntry.getProfile().getName()) != null) {
             Friend friend = Friends.get().get(playerListEntry.getProfile().getName());
-            if (friend != null) color = Friends.get().getFriendColor(friend);
+            if (friend != null) color = Friends.get().color;
         }
         else if (meteor.get() && MeteorPlayers.get(playerListEntry.getProfile().getId())) {
             color = meteorColor.get();

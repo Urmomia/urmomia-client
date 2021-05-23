@@ -23,25 +23,25 @@ public class ServerCommand extends Command {
         builder.executes(context -> {
             if(mc.isIntegratedServerRunning()) {
                 IntegratedServer server = mc.getServer();
-                ChatUtils.prefixInfo("Server","Singleplayer");
+                info("Singleplayer");
                 if (server != null) {
-                    ChatUtils.prefixInfo("Server", "Version: %s", server.getVersion());
+                    info( "Version: %s", server.getVersion());
                 }
                 return SINGLE_SUCCESS;
             }
             ServerInfo server = mc.getCurrentServerEntry();
 
             if (server == null) {
-                ChatUtils.prefixError("Server","Couldn't obtain any server information.");
+                error("Couldn't obtain any server information.");
                 return SINGLE_SUCCESS;
             }
 
-            ChatUtils.prefixInfo("Server","IP: %s", server.address);
+            info("IP: %s", server.address);
             String serverType = mc.player.getServerBrand();
             if (serverType == null) {
                 serverType = "unknown";
             }
-            ChatUtils.prefixInfo("Server","Type: %s", serverType);
+            info("Type: %s", serverType);
 
             BaseText motd = new LiteralText("Motd: ");
             if (server.label != null) {
@@ -56,7 +56,7 @@ public class ServerCommand extends Command {
             version.append(server.version);
             ChatUtils.info("Server", version);
             
-            ChatUtils.prefixInfo("Server","Protocol version: %d", server.protocolVersion);
+            info("Protocol version: %d", server.protocolVersion);
             
             return SINGLE_SUCCESS;
         });
@@ -64,7 +64,7 @@ public class ServerCommand extends Command {
         builder.then(literal("gamerules").executes(ctx -> {
             CompoundTag tag = mc.world.getGameRules().toNbt();
             tag.getKeys().forEach((key) -> {
-                    ChatUtils.prefixInfo("Server", "%s: %s", key, tag.getString(key));
+                    info( "%s: %s", key, tag.getString(key));
             });
             return SINGLE_SUCCESS;
         }));

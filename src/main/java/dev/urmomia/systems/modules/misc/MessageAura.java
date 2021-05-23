@@ -1,11 +1,4 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.misc;
-
-//Updated by squidoodly 24/07/2020
 
 import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.entity.EntityAddedEvent;
@@ -13,7 +6,6 @@ import dev.urmomia.settings.BoolSetting;
 import dev.urmomia.settings.Setting;
 import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.settings.StringSetting;
-import dev.urmomia.systems.friends.Friend;
 import dev.urmomia.systems.friends.Friends;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
@@ -44,7 +36,7 @@ public class MessageAura extends Module {
     private void onEntityAdded(EntityAddedEvent event) {
         if (!(event.entity instanceof PlayerEntity) || event.entity.getUuid().equals(mc.player.getUuid())) return;
 
-        if (!ignoreFriends.get() || (ignoreFriends.get() && !Friends.get().contains(new Friend((PlayerEntity)event.entity)))) {
+        if (!ignoreFriends.get() || (ignoreFriends.get() && !Friends.get().isFriend((PlayerEntity)event.entity))) {
             mc.player.sendChatMessage("/msg " + ((PlayerEntity) event.entity).getGameProfile().getName() + " " + message.get());
         }
     }

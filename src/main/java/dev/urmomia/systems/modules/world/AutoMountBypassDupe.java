@@ -1,11 +1,4 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.world;
-
-//Created by squidoodly 12/07/2020
 
 import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.packets.PacketEvent;
@@ -122,7 +115,7 @@ public class AutoMountBypassDupe extends Module {
                 if (slot != -1 && slot < 9) {
                     mc.player.inventory.selectedSlot  = slot;
                  } else {
-                    ChatUtils.moduleError(this, "Cannot find chest in your hotbar... disabling.");
+                    error("Cannot find chest in your hotbar... disabling.");
                     this.toggle();
                 }
             }

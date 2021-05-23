@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import meteordevelopment.orbit.EventHandler;
@@ -10,7 +5,7 @@ import dev.urmomia.events.world.TickEvent;
 import dev.urmomia.settings.*;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.entity.EntityUtils;
+import dev.urmomia.utils.entity.TargetUtils;
 import dev.urmomia.utils.entity.SortPriority;
 import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.world.BlockUtils;
@@ -74,7 +69,7 @@ public class SelfWeb extends Module {
                 placeWeb();
                 break;
             case Smart:
-                if (EntityUtils.getPlayerTarget(range.get(), SortPriority.LowestDistance, false) != null) placeWeb();
+                if (TargetUtils.getPlayerTarget(range.get(), SortPriority.LowestDistance) != null) placeWeb();
                 break;
         }
     }

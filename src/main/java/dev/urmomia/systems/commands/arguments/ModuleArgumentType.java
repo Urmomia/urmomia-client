@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.commands.arguments;
 
 import com.mojang.brigadier.StringReader;
@@ -33,6 +28,10 @@ public class ModuleArgumentType implements ArgumentType<Module> {
 
     public static ModuleArgumentType module() {
         return new ModuleArgumentType();
+    }
+
+    public static Module getModule(final CommandContext<?> context, final String name) {
+        return context.getArgument(name, Module.class);
     }
 
     @Override

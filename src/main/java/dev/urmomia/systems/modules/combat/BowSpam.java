@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import meteordevelopment.orbit.EventHandler;
@@ -14,6 +9,7 @@ import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.utils.player.InvUtils;
+import net.minecraft.item.ArrowItem;
 import net.minecraft.item.Items;
 
 public class BowSpam extends Module {
@@ -57,7 +53,8 @@ public class BowSpam extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Post event) {
-        if (InvUtils.findItemWithCount(Items.ARROW).slot == -1) return;
+        if (!mc.player.abilities.creativeMode && InvUtils.findItemInWhole(itemStack -> itemStack.getItem() instanceof ArrowItem) == -1) return;
+
         if (!onlyWhenHoldingRightClick.get() || mc.options.keyUse.isPressed()) {
             boolean isBow = mc.player.getMainHandStack().getItem() == Items.BOW;
             if (!isBow && wasBow) setPressed(false);

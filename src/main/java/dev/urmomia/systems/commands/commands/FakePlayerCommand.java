@@ -1,11 +1,13 @@
 package dev.urmomia.systems.commands.commands;
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.urmomia.systems.commands.Command;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.player.FakePlayer;
-import dev.urmomia.utils.entity.FakePlayerUtils;
+import dev.urmomia.utils.entity.fakeplayer.FakePlayerManager;
 import dev.urmomia.utils.player.ChatUtils;
 import net.minecraft.command.CommandSource;
 
@@ -16,26 +18,39 @@ public class FakePlayerCommand extends Command {
         super("fake-player", "Manages fake players that you can use for testing.");
     }
 
-    public static FakePlayer fakePlayer = Modules.get().get(FakePlayer.class);
-
     @Override
     public void build(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(literal("spawn").executes(context -> {
-            if (active()) FakePlayerUtils.spawnFakePlayer();
+            if (active()) FakePlayerManager.add("peefart cheesecake butt", 36, true);
             return SINGLE_SUCCESS;
-        })).then(literal("remove").then(argument("id", IntegerArgumentType.integer()).executes(context -> {
-            int id = context.getArgument("id", Integer.class);
-            if (active()) FakePlayerUtils.removeFakePlayer(id);
-            return SINGLE_SUCCESS;
-        }))).then(literal("clear").executes(context -> {
-            if (active()) FakePlayerUtils.clearFakePlayers();
+        })
+                        .then(argument("name", StringArgumentType.word())
+                .executes(context -> {
+                    if (active()) FakePlayerManager.add(StringArgumentType.getString(context, "name"), 36, true);
+                    return SINGLE_SUCCESS;
+                })
+                .then(argument("health", FloatArgumentType.floatArg(0))
+                        .executes(context -> {
+                    if (active()) FakePlayerManager.add(StringArgumentType.getString(context, "name"), FloatArgumentType.getFloat(context, "health"), true);
+                    return SINGLE_SUCCESS;
+                })
+                .then(argument("copy-inv", BoolArgumentType.bool())
+                        .executes(context -> {
+                            if (active()) FakePlayerManager.add(StringArgumentType.getString(context, "name"), FloatArgumentType.getFloat(context, "health"), BoolArgumentType.getBool(context, "copy-inv"));
+                            return SINGLE_SUCCESS;
+                        })
+                )))
+        );
+
+        builder.then(literal("clear").executes(context -> {
+            if (active()) FakePlayerManager.clear();
             return SINGLE_SUCCESS;
         }));
     }
 
     private boolean active() {
         if (!Modules.get().isActive(FakePlayer.class)) {
-            ChatUtils.moduleError(Modules.get().get(FakePlayer.class),"The FakePlayer module must be enabled to use this command.");
+            error("The FakePlayer module must be enabled.");
             return false;
         }
         else return true;

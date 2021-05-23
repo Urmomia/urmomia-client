@@ -1,36 +1,33 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.world.TickEvent;
-import dev.urmomia.settings.BoolSetting;
-import dev.urmomia.settings.DoubleSetting;
-import dev.urmomia.settings.Setting;
-import dev.urmomia.settings.SettingGroup;
-import dev.urmomia.systems.friends.Friends;
+import dev.urmomia.settings.*;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.entity.FakePlayerEntity;
-import dev.urmomia.utils.entity.FakePlayerUtils;
+import dev.urmomia.utils.entity.SortPriority;
+import dev.urmomia.utils.entity.TargetUtils;
 import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.world.BlockUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 
 public class AutoWeb extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
     private final Setting<Double> range = sgGeneral.add(new DoubleSetting.Builder()
-            .name("range")
-            .description("The maximum distance to be able to place webs.")
+            .name("target-range")
+            .description("The maximum distance to target players.")
             .defaultValue(4)
             .min(0)
+            .build()
+    );
+
+    private final Setting<SortPriority> priority = sgGeneral.add(new EnumSetting.Builder<SortPriority>()
+            .name("target-priority")
+            .description("How to select the player to target.")
+            .defaultValue(SortPriority.LowestDistance)
             .build()
     );
 
@@ -56,44 +53,12 @@ public class AutoWeb extends Module {
 
     @EventHandler
     private void onTick(TickEvent.Pre event) {
-        int slot = InvUtils.findItemInHotbar(Items.COBWEB);
-        if (slot == -1) return;
-
-        if (target != null) {
-            if (mc.player.distanceTo(target) > range.get() || !target.isAlive()) target = null;
+        if (TargetUtils.isBadTarget(target, range.get())) {
+            target = TargetUtils.getPlayerTarget(range.get(), priority.get());
         }
+        if (TargetUtils.isBadTarget(target, range.get())) return;
 
-        for (PlayerEntity player : mc.world.getPlayers()) {
-            if (player == mc.player || !Friends.get().attack(player) || !player.isAlive() || mc.player.distanceTo(player) > range.get()) continue;
-
-            if (target == null) {
-                target = player;
-            } else if (mc.player.distanceTo(target) > mc.player.distanceTo(player)) {
-                target = player;
-            }
-        }
-
-        if (target == null) {
-            for (FakePlayerEntity fakeTarget : FakePlayerUtils.getPlayers().keySet()) {
-                if (fakeTarget.getHealth() <= 0 || !Friends.get().attack(fakeTarget) || !fakeTarget.isAlive()) continue;
-
-                if (target == null) {
-                    target = fakeTarget;
-                    continue;
-                }
-
-                if (mc.player.distanceTo(fakeTarget) < mc.player.distanceTo(target)) target = fakeTarget;
-            }
-        }
-
-        if (target != null) {
-            BlockPos targetPos = target.getBlockPos();
-            BlockUtils.place(targetPos, Hand.MAIN_HAND, slot, rotate.get(), 0, false);
-
-            if (doubles.get()) {
-                targetPos = targetPos.add(0, 1, 0);
-                BlockUtils.place(targetPos, Hand.MAIN_HAND, InvUtils.findItemInHotbar(Items.COBWEB), rotate.get(), 0, false);
-            }
-        }
+        BlockUtils.place(target.getBlockPos(), Hand.MAIN_HAND, InvUtils.findItemInHotbar(Items.COBWEB), rotate.get(), 0, false);
+        if (doubles.get()) BlockUtils.place(target.getBlockPos().add(0, 1, 0), Hand.MAIN_HAND, InvUtils.findItemInHotbar(Items.COBWEB), rotate.get(), 0, false);
     }
 }

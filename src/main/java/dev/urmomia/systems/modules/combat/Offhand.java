@@ -11,7 +11,6 @@ import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.utils.misc.input.KeyAction;
-import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.player.SlotUtils;
 import net.minecraft.item.AxeItem;
@@ -93,7 +92,7 @@ public class Offhand extends Module {
             // No offhand item
             if (slot == -1) {
                 if (!sentMessage) {
-                    ChatUtils.moduleWarning(this, "Chosen item not found.");
+                    warning("Chosen item not found.");
                     sentMessage = true;
                 }
             }
@@ -137,7 +136,7 @@ public class Offhand extends Module {
 
     private int getSlot(Predicate<ItemStack> item) {
         if (hotbar.get()) return InvUtils.findItemInWhole(item);
-        else return InvUtils.findItemInMain(item);
+        else return InvUtils.findItemInInventory(item);
     }
 
     @Override

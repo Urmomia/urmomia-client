@@ -1,13 +1,8 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.render.hud.modules;
 
 import dev.urmomia.systems.modules.render.hud.HUD;
 import dev.urmomia.systems.modules.render.hud.HudRenderer;
-import dev.urmomia.utils.Utils;
+import dev.urmomia.utils.player.PlayerUtils;
 
 public class PositionHud extends HudElement {
     private final String left1 = "Pos: ";
@@ -39,7 +34,7 @@ public class PositionHud extends HudElement {
 
         right1 = String.format("%.1f %.1f %.1f", x1, y1, z1);
 
-        switch (Utils.getDimension()) {
+        switch (PlayerUtils.getDimension()) {
             case Overworld:
                 left2 = "Nether: ";
                 right2 = String.format("%.1f %.1f %.1f", x1 / 8.0, y1, z1 / 8.0);

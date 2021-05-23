@@ -1,11 +1,4 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
-
-//Created by squidoodly 13/07/2020
 
 import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.world.TickEvent;
@@ -308,4 +301,4 @@ public class Auto32K extends Module {
         list.add(Blocks.COBBLESTONE);
         return list;
     }
-}
+} 

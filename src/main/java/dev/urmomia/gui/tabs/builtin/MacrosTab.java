@@ -21,7 +21,6 @@ import dev.urmomia.systems.config.Config;
 import dev.urmomia.systems.macros.Macro;
 import dev.urmomia.systems.macros.Macros;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.Identifier;
 
 import static dev.urmomia.utils.Utils.mc;
 
@@ -41,14 +40,8 @@ public class MacrosTab extends Tab {
     }
 
     private static class MacrosScreen extends WindowTabScreen {
-        private static final Identifier LOGO = new Identifier("urmomia-client", "textures/hud/client-logo.png");
         public MacrosScreen(GuiTheme theme, Tab tab) {
             super(theme, tab);
-
-            mc.getTextureManager().bindTexture(LOGO);
-            WHorizontalList watermark = add(theme.horizontalList()).pad(4).top().widget();
-            watermark.add(theme.texture(256 * 0.2, 256 * 0.2, 0, mc.getTextureManager().getTexture(LOGO)));
-            watermark.add(theme.label(Config.version.getOriginalString()));
         }
 
         @Override
@@ -135,6 +128,8 @@ public class MacrosTab extends Tab {
                     onClose();
                 }
             };
+
+            enterAction = apply.action;
         }
 
         private void fillMessagesTable(WTable lines) {

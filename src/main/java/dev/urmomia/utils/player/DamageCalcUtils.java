@@ -1,13 +1,4 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.utils.player;
-
-//Created by squidoodly 18/04/2020
-//Updated by squidoodly 19/06/2020
-//Updated by squidoodly 24/07/2020
 
 import dev.urmomia.mixininterface.IExplosion;
 import net.minecraft.block.Blocks;
@@ -34,14 +25,14 @@ public class DamageCalcUtils {
 
     //Always Calculate damage, then armour, then enchantments, then potion effect
     public static double crystalDamage(LivingEntity player, Vec3d crystal) {
-        if (player instanceof PlayerEntity && ((PlayerEntity) player).abilities.creativeMode) return 0;
+        if (player instanceof PlayerEntity && ((PlayerEntity) player).isCreative()) return 0;
 
         // Calculate crystal damage
-        double modDistance = Math.sqrt(player.squaredDistanceTo(crystal));
-        if (modDistance > 12) return 0;
+        double distance = Math.sqrt(player.squaredDistanceTo(crystal));
+        if (distance > 12) return 0;
 
         double exposure = Explosion.getExposure(crystal, player);
-        double impact = (1.0 - (modDistance / 12.0)) * exposure;
+        double impact = (1.0 - (distance / 12.0)) * exposure;
         double damage = (impact * impact + impact) / 2 * 7 * (6 * 2) + 1;
 
         // Multiply damage by difficulty

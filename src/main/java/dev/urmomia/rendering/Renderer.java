@@ -1,8 +1,3 @@
-/*
-
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.rendering;
 
 import dev.urmomia.events.render.RenderEvent;

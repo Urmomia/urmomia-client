@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -46,7 +41,7 @@ public class AntiHit extends Module {
 
     @EventHandler(priority = EventPriority.HIGH)
     private void onAttackEntity(AttackEntityEvent event) {
-        if (antiFriendHit.get() && event.entity instanceof PlayerEntity && !Friends.get().attack((PlayerEntity) event.entity)) event.cancel();
+        if (antiFriendHit.get() && event.entity instanceof PlayerEntity && !Friends.get().shouldAttack((PlayerEntity) event.entity)) event.cancel();
         if (Modules.get().isActive(AntiHit.class) && entities.get().containsKey(event.entity.getType())) event.cancel();
     }
 }

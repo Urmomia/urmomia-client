@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.player;
 
 import dev.urmomia.settings.BoolSetting;
@@ -12,7 +7,6 @@ import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.config.Config;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.InvUtils;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
@@ -133,6 +127,6 @@ public class ChestSwap extends Module {
     @Override
     public void sendToggledMsg() {
         if (stayOn.get()) super.sendToggledMsg();
-        else if (Config.get().chatCommandsInfo) ChatUtils.moduleInfo(this, "Triggered (highlight)%s(default).", title);
+        else if (Config.get().chatCommandsInfo) info("Triggered (highlight)%s(default).", title);
     }
 }

@@ -1,10 +1,13 @@
 package dev.urmomia.systems.modules.player;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import baritone.api.BaritoneAPI;
 import baritone.api.pathing.goals.GoalXZ;
-import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.game.OpenScreenEvent;
-import dev.urmomia.events.packets.PacketEvent;
 import dev.urmomia.gui.GuiTheme;
 import dev.urmomia.gui.widgets.WLabel;
 import dev.urmomia.gui.widgets.WWidget;
@@ -19,16 +22,9 @@ import dev.urmomia.systems.waypoints.Waypoint;
 import dev.urmomia.systems.waypoints.Waypoints;
 import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.player.ChatUtils;
-
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.screen.DeathScreen;
-import net.minecraft.text.BaseText;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec3d;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DeathPosition extends Module {
 
@@ -90,14 +86,10 @@ public class DeathPosition extends Module {
         dmgPos = mc.player.getPos();
         deathPos.put("x", dmgPos.x);
         deathPos.put("z", dmgPos.z);
-        labelText = String.format("Latest death: %.1f, %.1f, %.1f", dmgPos.x, dmgPos.y, dmgPos.z);
+        labelText = String.format("Latest death: %s.", ChatUtils.formatCoords(dmgPos));
 
         String time = dateFormat.format(new Date());
-        //ChatUtils.moduleInfo(this, "Died at (highlight)%.0f(default), (highlight)%.0f(default), (highlight)%.0f (default)on (highlight)%s(default).", damagedplayerX, damagedplayerY, damagedplayerZ, time);
-        BaseText msg = new LiteralText("Died at ");
-        msg.append(ChatUtils.formatCoords(dmgPos));
-        msg.append(showTimestamp.get() ? String.format(" on %s.", time) : ".");
-        ChatUtils.moduleInfo(this,msg);
+        info("Died at %s on %s", ChatUtils.formatCoords(dmgPos), (showTimestamp.get() ? String.format(" on %s.", time) : "."));
 
         // Create waypoint
         if (createWaypoint.get()) {
@@ -128,7 +120,7 @@ public class DeathPosition extends Module {
 
     private void path() {
         if (deathPos.isEmpty() && mc.player != null) {
-            ChatUtils.moduleWarning(this,"No latest death found.");
+            warning("No latest death found.");
         }
         else {
             if (mc.world != null) {

@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.misc;
 
 import meteordevelopment.orbit.EventHandler;
@@ -15,7 +10,7 @@ import dev.urmomia.settings.StringSetting;
 import dev.urmomia.systems.friends.Friends;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.entity.FakePlayerEntity;
+import dev.urmomia.utils.entity.fakeplayer.FakePlayerEntity;
 import dev.urmomia.utils.player.ChatUtils;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -57,17 +52,17 @@ public class VisualRange extends Module {
 
     @EventHandler
     private void onEntityAdded(EntityAddedEvent event) {
-        if (event.entity.equals(mc.player) || !(event.entity instanceof PlayerEntity) || !Friends.get().attack((PlayerEntity) event.entity) && ignoreFriends.get() || (event.entity instanceof FakePlayerEntity && ignoreFakes.get())) return;
+        if (event.entity.equals(mc.player) || !(event.entity instanceof PlayerEntity) || !Friends.get().shouldAttack((PlayerEntity) event.entity) && ignoreFriends.get() || (event.entity instanceof FakePlayerEntity && ignoreFakes.get())) return;
 
         String enter = enterMessage.get().replace("{player}", ((PlayerEntity) event.entity).getGameProfile().getName());
-        ChatUtils.moduleInfo(this, enter);
+        info(enter);
     }
 
     @EventHandler
     private void onEntityRemoved(EntityRemovedEvent event) {
-        if (event.entity.equals(mc.player) || !(event.entity instanceof PlayerEntity) || !Friends.get().attack((PlayerEntity) event.entity) && ignoreFriends.get() || (event.entity instanceof FakePlayerEntity && ignoreFakes.get())) return;
+        if (event.entity.equals(mc.player) || !(event.entity instanceof PlayerEntity) || !Friends.get().shouldAttack((PlayerEntity) event.entity) && ignoreFriends.get() || (event.entity instanceof FakePlayerEntity && ignoreFakes.get())) return;
 
         String leave = leaveMessage.get().replace("{player}", ((PlayerEntity) event.entity).getGameProfile().getName());
-        ChatUtils.moduleInfo(this, leave);
+        info(leave);
     }
 }

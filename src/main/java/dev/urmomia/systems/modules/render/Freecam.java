@@ -7,15 +7,16 @@ import dev.urmomia.events.game.OpenScreenEvent;
 import dev.urmomia.events.meteor.KeyEvent;
 import dev.urmomia.events.world.ChunkOcclusionEvent;
 import dev.urmomia.events.world.TickEvent;
-import dev.urmomia.settings.*;
+import dev.urmomia.settings.BoolSetting;
+import dev.urmomia.settings.DoubleSetting;
+import dev.urmomia.settings.Setting;
+import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.utils.misc.Vec3;
 import dev.urmomia.utils.misc.input.KeyAction;
-import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.Rotations;
 import net.minecraft.client.options.Perspective;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -24,13 +25,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class Freecam extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
-
-    public enum AutoDisableEvent {
-        None,
-        OnDamage,
-        OnDeath
-    }
-
+    
     private final Setting<Double> speed = sgGeneral.add(new DoubleSetting.Builder()
             .name("speed")
             .description("Your speed while in Freecam.")
@@ -39,15 +34,22 @@ public class Freecam extends Module {
             .build()
     );
 
-    private final Setting<AutoDisableEvent> autoDisableOnDamage = sgGeneral.add(new EnumSetting.Builder<AutoDisableEvent>()
-            .name("auto-disable-on-damage")
-            .description("Disables Freecam when you either take damage or die.")
-            .defaultValue(AutoDisableEvent.OnDamage)
+    private final Setting<Boolean> autoDisableOnDamage = sgGeneral.add(new BoolSetting.Builder()
+            .name("toggle-on-damage")
+            .description("Disables freecam when you take damage.")
+            .defaultValue(false)
+            .build()
+    );
+
+    private final Setting<Boolean> autoDisableOnDeath = sgGeneral.add(new BoolSetting.Builder()
+            .name("toggle-on-death")
+            .description("Disables freecam when you die.")
+            .defaultValue(false)
             .build()
     );
 
     private final Setting<Boolean> autoDisableOnLog = sgGeneral.add(new BoolSetting.Builder()
-            .name("auto-disable-on-log")
+            .name("toggle-on-log")
             .description("Disables Freecam when you disconnect from a server.")
             .defaultValue(true)
             .build()
@@ -61,15 +63,15 @@ public class Freecam extends Module {
     );
 
     private final Setting<Boolean> renderHands = sgGeneral.add(new BoolSetting.Builder()
-            .name("render-hand")
-            .description("Whether or not to render your hand in Freecam.")
+            .name("show-hands")
+            .description("Whether or not to render your hands in Freecam.")
             .defaultValue(true)
             .build()
     );
 
     private final Setting<Boolean> rotate = sgGeneral.add(new BoolSetting.Builder()
             .name("rotate")
-            .description("Rotates your character to whatever block or entity you are looking at.")
+            .description("Rotates you to the block or entity you are looking at.")
             .defaultValue(false)
             .build()
     );
@@ -85,7 +87,7 @@ public class Freecam extends Module {
     private boolean forward, backward, right, left, up, down;
 
     public Freecam() {
-        super(Categories.Render, "freecam", "Makes you fly out of your body.");
+        super(Categories.Render, "freecam", "Allows the camera to move freely from the player.");
     }
 
     @Override
@@ -244,9 +246,9 @@ public class Freecam extends Module {
         if (event.entity.getUuid() == null) return;
         if (!event.entity.getUuid().equals(mc.player.getUuid())) return;
 
-        if ((autoDisableOnDamage.get() == AutoDisableEvent.OnDamage) || (autoDisableOnDamage.get() == AutoDisableEvent.OnDeath && event.entity.getHealth() <= 0)) {
+        if (autoDisableOnDamage.get() || (autoDisableOnDeath.get() && event.entity.getHealth() <= 0)) {
             toggle();
-            ChatUtils.moduleInfo(this, "Auto toggled %s(default).", isActive() ? Formatting.GREEN + "on" : Formatting.RED + "off");
+            info("Auto toggled because you took damage or died.");
         }
     }
 

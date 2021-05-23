@@ -11,7 +11,6 @@ import dev.urmomia.gui.screens.NotebotHelpScreen;
 import dev.urmomia.systems.commands.Command;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.misc.Notebot;
-import dev.urmomia.utils.player.ChatUtils;
 import net.minecraft.command.CommandSource;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.sound.SoundEvents;
@@ -64,7 +63,7 @@ public class NotebotCommand extends Command {
             Notebot notebot = Modules.get().get(Notebot.class);
             String name = ctx.getArgument("name", String.class);
             if (name == null || name.equals("")) {
-                ChatUtils.prefixError("Notebot","Invalid name");
+                error("Invalid name");
             }
             Path path = MainClient.FOLDER.toPath().resolve(String.format("notebot/%s.txt",name));
             if (!path.toFile().exists()) {
@@ -77,7 +76,7 @@ public class NotebotCommand extends Command {
             Notebot notebot = Modules.get().get(Notebot.class);
             String name = ctx.getArgument("name", String.class);
             if (name == null || name == "") {
-                ChatUtils.prefixError("Notebot","Invalid name");
+                error("Invalid name");
             }
             Path path = MainClient.FOLDER.toPath().resolve(String.format("notebot/%s.txt",name));
             if (!path.toFile().exists()) {
@@ -90,18 +89,18 @@ public class NotebotCommand extends Command {
             ticks = -1;
             song.clear();
             MainClient.EVENT_BUS.subscribe(this);
-            ChatUtils.prefixInfo("Notebot","Recording started");
+            info("Recording started");
             return  SINGLE_SUCCESS;
         })));
         builder.then(literal("record").then(literal("cancel").executes(ctx -> {
             MainClient.EVENT_BUS.unsubscribe(this);
-            ChatUtils.prefixInfo("Notebot","Recording cancelled");
+            info("Recording cancelled");
             return  SINGLE_SUCCESS;
         })));
         builder.then(literal("record").then(literal("save").then(argument("name",StringArgumentType.greedyString()).executes(ctx -> {
             String name = ctx.getArgument("name", String.class);
             if (name == null || name == "") {
-                ChatUtils.prefixError("Notebot","Invalid name");
+                error("Invalid name");
             }
             Path path = MainClient.FOLDER.toPath().resolve(String.format("notebot/%s.txt",name));
             saveRecording(path);
@@ -144,10 +143,10 @@ public class NotebotCommand extends Command {
                     note.get(0), note.get(1)
             ));
             file.close();
-            ChatUtils.prefixInfo("Notebot",String.format("Song saved. Length: (highlight)%d(default).",note.get(0)));
+            info(String.format("Song saved. Length: (highlight)%d(default).",note.get(0)));
             MainClient.EVENT_BUS.unsubscribe(this);
         } catch (IOException e) {
-            ChatUtils.prefixError("Notebot","Couldn't create the file.");
+            error("Couldn't create the file.");
             MainClient.EVENT_BUS.unsubscribe(this);
         }
 

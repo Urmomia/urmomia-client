@@ -1,15 +1,10 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.utils.player;
 
 import dev.urmomia.mixin.AbstractBlockAccessor;
 import dev.urmomia.systems.friends.Friends;
 import dev.urmomia.utils.Utils;
-import dev.urmomia.utils.entity.FakePlayerEntity;
-import dev.urmomia.utils.entity.FakePlayerUtils;
+import dev.urmomia.utils.entity.fakeplayer.FakePlayerEntity;
+import dev.urmomia.utils.entity.fakeplayer.FakePlayerManager;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -36,7 +31,7 @@ public class CityUtils {
         for (PlayerEntity target : mc.world.getPlayers()) {
             if (target == mc.player
                     || target.isDead()
-                    || !Friends.get().attack(target)
+                    || !Friends.get().shouldAttack(target)
                     || mc.player.distanceTo(target) > range
             ) continue;
 
@@ -51,8 +46,8 @@ public class CityUtils {
         }
 
         if (closestTarget == null) {
-            for (FakePlayerEntity target : FakePlayerUtils.getPlayers().keySet()) {
-                if (target.isDead() || !Friends.get().attack(target) || mc.player.distanceTo(target) > range) continue;
+            for (FakePlayerEntity target : FakePlayerManager.getPlayers()) {
+                if (target.isDead() || !Friends.get().shouldAttack(target) || mc.player.distanceTo(target) > range) continue;
 
                 if (closestTarget == null) {
                     closestTarget = target;

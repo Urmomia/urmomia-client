@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.world;
 
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -19,9 +14,6 @@ import dev.urmomia.systems.modules.Module;
 import dev.urmomia.utils.player.ChatUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.BaseText;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.Formatting;
 
 public class EntityLogger extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -64,10 +56,7 @@ public class EntityLogger extends Module {
             if (playerNames.get() && event.entity instanceof PlayerEntity) name = ((PlayerEntity) event.entity).getGameProfile().getName() + " (Player)";
             else name = event.entity.getType().getName().getString();
 
-            BaseText msg = new LiteralText(String.format("%s%s %shas spawned at ", Formatting.WHITE, name, Formatting.GRAY));
-            msg.append(ChatUtils.formatCoords(event.entity.getPos()));
-            msg.append(".");
-            ChatUtils.moduleInfo(this, msg);
+            info("(highlight)%s(default) has spawned at %s.", name, ChatUtils.formatCoords(event.entity.getPos()));
         }
     }
 }

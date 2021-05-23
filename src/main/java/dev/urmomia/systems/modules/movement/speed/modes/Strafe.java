@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.movement.speed.modes;
 
 import dev.urmomia.events.entity.player.PlayerMoveEvent;
@@ -14,10 +9,10 @@ import dev.urmomia.systems.modules.movement.speed.SpeedModes;
 import dev.urmomia.utils.misc.Vector2;
 import dev.urmomia.utils.player.PlayerUtils;
 
-public class NCP extends SpeedMode {
+public class Strafe extends SpeedMode {
 
-    public NCP() {
-        super(SpeedModes.NCP);
+    public Strafe() {
+        super(SpeedModes.Strafe);
     }
 
     private long timer = 0L;
@@ -56,7 +51,7 @@ public class NCP extends SpeedMode {
             speed = Math.min(speed, System.currentTimeMillis() - timer > 1250L ? 0.44D : 0.43D);
         }
 
-        Vector2 change = PlayerUtils.transformStrafe(speed);
+        Vector2 change = transformStrafe(speed);
 
         double velX = change.x;
         double velZ = change.y;
@@ -68,6 +63,40 @@ public class NCP extends SpeedMode {
         }
 
         ((IVec3d) event.movement).setXZ(velX, velZ);
+    }
+
+    private Vector2 transformStrafe(double speed) {
+        float forward = mc.player.input.movementForward;
+        float side = mc.player.input.movementSideways;
+        float yaw = mc.player.prevYaw + (mc.player.yaw - mc.player.prevYaw) * mc.getTickDelta();
+
+        double velX, velZ;
+
+        if (forward == 0.0f && side == 0.0f) return new Vector2(0, 0);
+
+        else if (forward != 0.0f) {
+            if (side >= 1.0f) {
+                yaw += (float) (forward > 0.0f ? -45 : 45);
+                side = 0.0f;
+            } else if (side <= -1.0f) {
+                yaw += (float) (forward > 0.0f ? 45 : -45);
+                side = 0.0f;
+            }
+
+            if (forward > 0.0f)
+                forward = 1.0f;
+
+            else if (forward < 0.0f)
+                forward = -1.0f;
+        }
+
+        double mx = Math.cos(Math.toRadians(yaw + 90.0f));
+        double mz = Math.sin(Math.toRadians(yaw + 90.0f));
+
+        velX = (double) forward * speed * mx + (double) side * speed * mz;
+        velZ = (double) forward * speed * mz - (double) side * speed * mx;
+
+        return new Vector2(velX, velZ);
     }
 
     @Override

@@ -1,15 +1,8 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.friends;
 
 import dev.urmomia.systems.System;
 import dev.urmomia.systems.Systems;
-import dev.urmomia.utils.entity.FriendType;
 import dev.urmomia.utils.misc.NbtUtils;
-import dev.urmomia.utils.render.color.Color;
 import dev.urmomia.utils.render.color.RainbowColors;
 import dev.urmomia.utils.render.color.SettingColor;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,16 +15,10 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Friends extends System<Friends> implements Iterable<Friend> {
-    public final SettingColor enemyColor = new SettingColor(204, 0, 0);
-    public final SettingColor neutralColor = new SettingColor(0, 255, 180);
-    public final SettingColor trustedColor = new SettingColor(57, 247, 47);
-
-    public boolean attackNeutral = false;
-    public boolean showEnemies = true;
-    public boolean showNeutral = true;
-    public boolean showTrusted = true;
-
     private List<Friend> friends = new ArrayList<>();
+
+    public final SettingColor color = new SettingColor(0, 255, 180);
+    public boolean attack = false;
 
     public Friends() {
         super("friends");
@@ -43,9 +30,7 @@ public class Friends extends System<Friends> implements Iterable<Friend> {
 
     @Override
     public void init() {
-        RainbowColors.add(enemyColor);
-        RainbowColors.add(neutralColor);
-        RainbowColors.add(trustedColor);
+        RainbowColors.add(color);
     }
 
     public boolean add(Friend friend) {
@@ -61,12 +46,13 @@ public class Friends extends System<Friends> implements Iterable<Friend> {
         return false;
     }
 
-    public List<Friend> getAll() {
-        return friends;
-    }
+    public boolean remove(Friend friend) {
+        if (friends.remove(friend)) {
+            save();
+            return true;
+        }
 
-    public boolean contains(Friend friend) {
-        return friends.contains(friend);
+        return false;
     }
 
     public Friend get(String name) {
@@ -80,74 +66,16 @@ public class Friends extends System<Friends> implements Iterable<Friend> {
     }
 
     public Friend get(PlayerEntity player) {
-        return get(player.getGameProfile().getName());
+        return get(player.getEntityName());
     }
 
-    public boolean notTrusted(PlayerEntity player) {
+    public boolean isFriend(PlayerEntity player) {
+        return get(player) != null;
+    }
+
+    public boolean shouldAttack(PlayerEntity player) {
         Friend friend = get(player);
-        return friend == null || friend.type != FriendType.Trusted;
-    }
-
-    public boolean show(PlayerEntity player) {
-        Friend friend = get(player);
-        if (friend == null) return false;
-        switch (friend.type) {
-            case Enemy:
-                return showEnemies;
-            case Trusted:
-                return showTrusted;
-            default:
-                return showNeutral;
-        }
-    }
-
-    public boolean attack(PlayerEntity player) {
-        Friend friend = get(player);
-        if (friend == null) return true;
-        switch (friend.type) {
-            case Enemy:
-                return true;
-            case Trusted:
-                return false;
-            default:
-                return attackNeutral;
-        }
-    }
-
-    public Color getFriendColor(Friend friend) {
-        if (friend == null) return null;
-
-        Color color = null;
-        switch (friend.type) {
-            case Enemy:
-                color = Friends.get().enemyColor;
-                break;
-            case Trusted:
-                color = Friends.get().trustedColor;
-                break;
-            case Neutral:
-                color = Friends.get().neutralColor;
-                break;
-        }
-        return color;
-    }
-
-    public Color getFriendColor(PlayerEntity player) {
-        return getFriendColor(get(player));
-    }
-
-    public void addOrRemove(Friend friend) {
-        if (friends.contains(friend)) remove(friend);
-        else add(friend);
-    }
-
-    public boolean remove(Friend friend) {
-        if (friends.remove(friend)) {
-            save();
-            return true;
-        }
-
-        return false;
+        return friend != null && !attack;
     }
 
     public int count() {
@@ -166,14 +94,8 @@ public class Friends extends System<Friends> implements Iterable<Friend> {
 
         for (Friend friend : friends) friendsTag.add(friend.toTag());
         tag.put("friends", friendsTag);
-        tag.put("enemy-color", enemyColor.toTag());
-        tag.put("neutral-color", neutralColor.toTag());
-        tag.put("trusted-color", trustedColor.toTag());
-        tag.putBoolean("attack-neutral", attackNeutral);
-        tag.putBoolean("show-enemies", showEnemies);
-        tag.putBoolean("show-neutral", showNeutral);
-        tag.putBoolean("show-trusted", showTrusted);
-
+        tag.put("color", color.toTag());
+        tag.putBoolean("attack", attack);
 
         return tag;
     }
@@ -181,13 +103,8 @@ public class Friends extends System<Friends> implements Iterable<Friend> {
     @Override
     public Friends fromTag(CompoundTag tag) {
         friends = NbtUtils.listFromTag(tag.getList("friends", 10), tag1 -> new Friend((CompoundTag) tag1));
-        if (tag.contains("enemy-color")) enemyColor.fromTag(tag.getCompound("enemy-color"));
-        if (tag.contains("neutral-color")) neutralColor.fromTag(tag.getCompound("neutral-color"));
-        if (tag.contains("trusted-color")) trustedColor.fromTag(tag.getCompound("trusted-color"));
-        if (tag.contains("attack-neutral")) attackNeutral = tag.getBoolean("attack-neutral");
-        if (tag.contains("show-enemies")) showEnemies = tag.getBoolean("show-enemies");
-        if (tag.contains("show-neutral")) showNeutral = tag.getBoolean("show-neutral");
-        if (tag.contains("show-trusted")) showTrusted = tag.getBoolean("show-trusted");
+        if (tag.contains("color")) color.fromTag(tag.getCompound("color"));
+        attack = tag.contains("attack") && tag.getBoolean("attack");
         return this;
     }
 }

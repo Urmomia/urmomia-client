@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.commands.commands;
 
 import baritone.api.BaritoneAPI;
@@ -17,7 +12,6 @@ import dev.urmomia.systems.modules.Module;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.misc.Swarm;
 import dev.urmomia.systems.modules.world.InfinityMiner;
-import dev.urmomia.utils.player.ChatUtils;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.BlockStateArgument;
 import net.minecraft.command.argument.BlockStateArgumentType;
@@ -61,7 +55,7 @@ public class SwarmCommand extends Command {
                             swarm.currentMode = Swarm.Mode.Idle;
                             Modules.get().get(Swarm.class).toggle();
                         } else {
-                            ChatUtils.moduleInfo(Modules.get().get(Swarm.class), "You are the queen.");
+                            info("You are the queen.");
                         }
                     }
                     return SINGLE_SUCCESS;
@@ -180,10 +174,10 @@ public class SwarmCommand extends Command {
                                         swarm.server.sendMessage(context.getInput());
                                     if (swarm.currentMode != Swarm.Mode.Queen) {
                                         swarm.targetBlock = context.getArgument("block",BlockStateArgument.class).getBlockState();
-                                    } else ChatUtils.moduleError(Modules.get().get(Swarm.class),"Null block");
+                                    } else error("Null block");
                                 }
                             } catch (Exception e) {
-                                ChatUtils.moduleError(Modules.get().get(Swarm.class),"Error in baritone command. " + e.getClass().getSimpleName());
+                                error("Error in baritone command. " + e.getClass().getSimpleName());
                             }
                             return SINGLE_SUCCESS;
                         })

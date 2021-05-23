@@ -44,6 +44,7 @@ public class InvUtils {
         return ACTION;
     }
 
+
     // Hand
 
     public static Hand getHand(Item item) {
@@ -66,7 +67,7 @@ public class InvUtils {
         findItemResult.slot = -1;
         findItemResult.count = 0;
 
-        for (int i = 0; i <= 35; i++) {
+        for (int i = 0; i < mc.player.inventory.size(); i++) {
             ItemStack itemStack = mc.player.inventory.getStack(i);
 
             if (itemStack.getItem() == item) {
@@ -90,12 +91,12 @@ public class InvUtils {
     }
 
     //Main
-    public static int findItemInMain(Predicate<ItemStack> isGood) {
+    public static int findItemInInventory(Predicate<ItemStack> isGood) {
         return findItem(isGood, 9, 35);
     }
 
-    public static int findItemInMain(Item item) {
-        return findItemInMain(itemStack -> itemStack.getItem() == item);
+    public static int findItemInInventory(Item item) {
+        return findItemInInventory(itemStack -> itemStack.getItem() == item);
     }
 
     // Whole
@@ -107,8 +108,8 @@ public class InvUtils {
         return findItemInWhole(itemStack -> itemStack.getItem() == item);
     }
 
-    private static int findItem(Predicate<ItemStack> isGood, int start, int end) {
-        for (int i = start; i <= end; i++) {
+    private static int findItem(Predicate<ItemStack> isGood, int startSlot, int endSlot) {
+        for (int i = startSlot; i <= endSlot; i++) {
             if (isGood.test(mc.player.inventory.getStack(i))) return i;
         }
         return -1;

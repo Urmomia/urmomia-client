@@ -1,11 +1,4 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.misc;
-
-//Created by squidoodly 06/07/2020 AT FUCKING 12:00AM KILL ME
 
 import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.MainClient;
@@ -15,7 +8,6 @@ import dev.urmomia.mixininterface.IClientPlayerInteractionManager;
 import dev.urmomia.settings.*;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.InvUtils;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.Items;
@@ -32,44 +24,42 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-// FUCK YOU GHOST TYPES
-// agreed fuck that guy.
 
 public class BookBot extends Module {
     private static final int LINE_WIDTH = 113;
 
-    public enum Mode{ // Edna Mode
+    public enum Mode {
         File,
         Random,
         Ascii
     }
 
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();//Obligatory comment.
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>() //WEEEEEEEEEEEEEEEEEEEE (Wanted to add a comment on everything but nothing to say so fuck you.)
+    private final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
             .name("mode")
             .description("The mode of the book bot.")
             .defaultValue(Mode.Ascii)
             .build()
     );
-    //Idk how to add the name into the book so you're gonna have to do it or tell me.
+
     private final Setting<String> name = sgGeneral.add(new StringSetting.Builder()
             .name("name")
             .description("The name you want to give your books.")
-            .defaultValue("Meteor on Crack!") //METEOR ON CRACK!!! / based.
+            .defaultValue("Gâteau au fromage")
             .build()
     );
 
     private final Setting<String> fileName = sgGeneral.add(new StringSetting.Builder()
             .name("file-name")
-            .description("The name of the text file (.txt NEEDED)") //Some retard will do it without and complain like a tard.
+            .description("The name of the text file (.txt NEEDED)")
             .defaultValue("book.txt")
             .build()
     );
 
     private final Setting<Integer> noOfPages = sgGeneral.add(new IntSetting.Builder()
             .name("no-of-pages")
-            .description("The number of pages to write per book.") //Fuck making it individual per book.
+            .description("The number of pages to write per book.")
             .defaultValue(100)
             .min(1)
             .max(100)
@@ -94,7 +84,6 @@ public class BookBot extends Module {
             .build()
     );
 
-    //Please don't ask my why they are global. I have no answer for you.
     private static final Random RANDOM = new Random();
     private ListTag pages = new ListTag();
     private int booksLeft;
@@ -109,12 +98,11 @@ public class BookBot extends Module {
     private String fileString;
 
     public BookBot(){
-        super(Categories.Misc, "book-bot", "Writes an amount of books full of characters or from a file."); //Grammar who? / too ez.
+        super(Categories.Misc, "book-bot", "Writes all existing books full of characters or from a file.");
     }
 
     @Override
-    public void onActivate() { //WHY THE FUCK DOES OnActivate NOT CORRECT TO onActivate? Fucking retard.
-        //We need to enter the loop somehow. ;)
+    public void onActivate() {
         booksLeft = noOfBooks.get();
         firstTime = true;
     }
@@ -145,8 +133,7 @@ public class BookBot extends Module {
                 ((IClientPlayerInteractionManager) mc.interactionManager).syncSelectedSlot2();
             } else if (itemResult.slot > 8){ //Else if it's in their inventory then swap their current item with the writable book
                 InvUtils.move().from(itemResult.slot).toHotbar(mc.player.inventory.selectedSlot);
-            } else { // Otherwise we are out and we can just wait for more books.
-                // I'm always waiting. Watching. Get more books. I dare you. :))))
+            } else { 
                 return;
             }
         }
@@ -157,13 +144,13 @@ public class BookBot extends Module {
             return;
         }
         if(mode.get() == Mode.Random){
-            // Generates a random stream of integers??
+            // Generates a random stream of integers
             IntStream charGenerator = RANDOM.ints(0x80, 0x10ffff - 0x800).map(i -> i < 0xd800 ? i : i + 0x800);
             stream = charGenerator.limit(23000).iterator();
             firstChar = true;
             writeBook();
         }else if(mode.get() == Mode.Ascii){
-            // Generates a random stream of integers??
+            // Generates a random stream of integers
             IntStream charGenerator = RANDOM.ints(0x20, 0x7f);
             stream = charGenerator.limit(35000).iterator();
             firstChar = true;
@@ -175,11 +162,11 @@ public class BookBot extends Module {
 
                 // Check to see if the file exists.
                 if (!file.exists()) {
-                    ChatUtils.moduleError(this, "The file you specified doesn't exist in the meteor folder."); // You dumb bitch.
+                    error("The file you specified doesn't exist in the Urmomia Client folder.");
                     return;
                 }
 
-                // ry to read the file.
+                // Try to read the file.
                 try {
                     //Create the reader
                     BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -196,10 +183,9 @@ public class BookBot extends Module {
                     stream = fileString.chars().iterator();
                     firstChar = true;
                     writeBook();
-                } catch (IOException ignored) { //EZ ignore. > 1 blocked message.
+                } catch (IOException ignored) {
                     // If it fails then send a message.
-                    ChatUtils.moduleError(this, "Failed to read the file.");
-                    //When you try your best but you don't succeed.
+                    error("Failed to read the file.");
                 }
             } else {
                 if (stream != null) {
@@ -258,7 +244,7 @@ public class BookBot extends Module {
         }
 
         mc.player.getMainHandStack().putSubTag("pages", pages);
-        mc.player.getMainHandStack().putSubTag("author", StringTag.of("squidoodly"));
+        mc.player.getMainHandStack().putSubTag("author", StringTag.of("popbob"));
         mc.player.getMainHandStack().putSubTag("title", StringTag.of(name.get()));
         mc.player.networkHandler.sendPacket(new BookUpdateC2SPacket(mc.player.getMainHandStack(), true, mc.player.inventory.selectedSlot));
         booksLeft--;
@@ -273,5 +259,4 @@ public class BookBot extends Module {
         nextChar = stream.nextInt();
         return true;
     }
-} //IT TOOK ME 30 FUCKING MINUTES TO COMMENT THIS. I WANT TO DIE. SEND HELP. CODING METEOR IS BECOMING AN ADDICTION. PLEASE. CAN SOMEONE HEAR ME? ANYONE?
-// this is a r/squidoodly moment.
+}

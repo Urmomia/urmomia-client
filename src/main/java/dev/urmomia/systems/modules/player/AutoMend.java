@@ -8,7 +8,6 @@ import dev.urmomia.settings.Setting;
 import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.InvUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -62,7 +61,7 @@ public class AutoMend extends Module {
 
         if (slot == -1) {
             if (autoDisable.get()) {
-                ChatUtils.moduleInfo(this, "Repaired all items, disabling");
+                info("Repaired all items, disabling");
 
                 if (didMove) {
                     int emptySlot = getEmptySlot();

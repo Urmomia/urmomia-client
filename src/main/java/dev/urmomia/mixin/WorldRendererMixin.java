@@ -33,8 +33,6 @@ public abstract class WorldRendererMixin {
 
     @Shadow @Nullable private Framebuffer entityOutlinesFramebuffer;
 
-    @Shadow @Final private MinecraftClient client;
-
     @Inject(method = "loadEntityOutlineShader", at = @At("TAIL"))
     private void onLoadEntityOutlineShader(CallbackInfo info) {
         Outlines.load();
@@ -77,18 +75,21 @@ public abstract class WorldRendererMixin {
         if (vertexConsumers == Outlines.vertexConsumerProvider) return;
 
         ESP esp = Modules.get().get(ESP.class);
-        if (!esp.isActive() || !esp.isOutline()) return;
 
         Color color = esp.getOutlineColor(entity);
 
-        if (color != null) {
-            Framebuffer fbo = this.entityOutlinesFramebuffer;
+        if (esp.shouldDrawOutline(entity)) {
+            Framebuffer prevBuffer = this.entityOutlinesFramebuffer;
             this.entityOutlinesFramebuffer = Outlines.outlinesFbo;
 
+            Outlines.setUniform("width", esp.outlineWidth.get());
+            Outlines.setUniform("fillOpacity", esp.fillOpacity.get().floatValue() / 255f);
+            Outlines.setUniform("shapeMode", (float) esp.shapeMode.get().ordinal());
             Outlines.vertexConsumerProvider.setColor(color.r, color.g, color.b, color.a);
+
             renderEntity(entity, cameraX, cameraY, cameraZ, tickDelta, matrices, Outlines.vertexConsumerProvider);
 
-            this.entityOutlinesFramebuffer = fbo;
+            this.entityOutlinesFramebuffer = prevBuffer;
         }
     }
     
@@ -116,7 +117,7 @@ public abstract class WorldRendererMixin {
             info.setStage(stage);
             BlockUtils.breakingBlocks.put(entityId, info);
 
-            if (Modules.get().isActive(BreakIndicators.class) && Modules.get().get(BreakIndicators.class).hideVanillaIndicators.get()) ci.cancel();
+            if (Modules.get().isActive(BreakIndicators.class)) ci.cancel();
         } else {
             BlockUtils.breakingBlocks.remove(entityId);
         }

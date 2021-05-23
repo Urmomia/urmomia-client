@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import meteordevelopment.orbit.EventHandler;
@@ -12,8 +7,8 @@ import dev.urmomia.settings.*;
 import dev.urmomia.systems.friends.Friends;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.entity.FakePlayerEntity;
-import dev.urmomia.utils.entity.FakePlayerUtils;
+import dev.urmomia.utils.entity.fakeplayer.FakePlayerEntity;
+import dev.urmomia.utils.entity.fakeplayer.FakePlayerManager;
 import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.world.BlockUtils;
@@ -166,7 +161,7 @@ public class AutoAnvil extends Module {
     private void onTick(TickEvent.Pre event) {
         // Head check
         if (isActive() && toggleOnBreak.get() && target != null && target.inventory.getArmorStack(3).isEmpty()) {
-            ChatUtils.moduleError(this, "Target head slot is empty... disabling.");
+            error("Target head slot is empty... disabling.");
             toggle();
             return;
         }
@@ -176,15 +171,15 @@ public class AutoAnvil extends Module {
 
         // find enemy
         for (PlayerEntity player : mc.world.getPlayers()) {
-            if (player == mc.player || !Friends.get().attack(player) || !player.isAlive() || mc.player.distanceTo(player) > range.get() || isHole(player.getBlockPos())) continue;
+            if (player == mc.player || !Friends.get().shouldAttack(player) || !player.isAlive() || mc.player.distanceTo(player) > range.get() || isHole(player.getBlockPos())) continue;
 
             if (target == null) target = player;
             else if (mc.player.distanceTo(target) > mc.player.distanceTo(player)) target = player;
         }
 
         if (target == null) {
-            for (FakePlayerEntity player : FakePlayerUtils.getPlayers().keySet()) {
-                if (!Friends.get().attack(player) || !player.isAlive() || mc.player.distanceTo(player) > range.get() || isHole(player.getBlockPos())) continue;
+            for (FakePlayerEntity player : FakePlayerManager.getPlayers()) {
+                if (!Friends.get().shouldAttack(player) || !player.isAlive() || mc.player.distanceTo(player) > range.get() || isHole(player.getBlockPos())) continue;
 
                 if (target == null) target = player;
                 else if (mc.player.distanceTo(target) > mc.player.distanceTo(player)) target = player;
@@ -249,7 +244,7 @@ public class AutoAnvil extends Module {
 
             // If we are too far away
             if (startHeightValue <= minHeight.get()) {
-                ChatUtils.moduleError(this, "Target too far away... disabling.");
+                error("Target too far away... disabling.");
                 toggle();
                 return;
             }

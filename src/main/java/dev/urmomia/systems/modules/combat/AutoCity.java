@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.combat;
 
 import dev.urmomia.mixininterface.IClientPlayerInteractionManager;
@@ -12,7 +7,6 @@ import dev.urmomia.settings.Setting;
 import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.CityUtils;
 import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.player.Rotations;
@@ -80,12 +74,12 @@ public class AutoCity extends Module {
         BlockPos mineTarget = CityUtils.getTargetBlock(target);
 
         if (target == null || mineTarget == null) {
-            if (chatInfo.get()) ChatUtils.moduleError(this, "No target block found... disabling.");
+            if (chatInfo.get()) error("No target block found... disabling.");
         } else {
-            if (chatInfo.get()) ChatUtils.moduleInfo(this, "Attempting to city " + target.getGameProfile().getName());
+            if (chatInfo.get()) info("Attempting to city " + target.getGameProfile().getName());
 
             if (MathHelper.sqrt(mc.player.squaredDistanceTo(mineTarget.getX(), mineTarget.getY(), mineTarget.getZ())) > mc.interactionManager.getReachDistance()) {
-                if (chatInfo.get()) ChatUtils.moduleError(this, "Target block out of reach... disabling.");
+                if (chatInfo.get()) error("Target block out of reach... disabling.");
                 toggle();
                 return;
             }
@@ -95,7 +89,7 @@ public class AutoCity extends Module {
             if (mc.player.abilities.creativeMode) slot = mc.player.inventory.selectedSlot;
 
             if (slot == -1) {
-                if (chatInfo.get()) ChatUtils.moduleError(this, "No pick found... disabling.");
+                if (chatInfo.get()) error("No pick found... disabling.");
                 toggle();
                 return;
             }
@@ -109,11 +103,11 @@ public class AutoCity extends Module {
                         && mc.world.getBlockState(blockPos).getBlock() != Blocks.OBSIDIAN
                         && mc.world.getBlockState(blockPos).getBlock() != Blocks.BEDROCK
                         && chatInfo.get()) {
-                    ChatUtils.moduleWarning(this, "Couldn't place support block, mining anyway.");
+                    warning("Couldn't place support block, mining anyway.");
                 }
                 else {
                     if (obbySlot == -1) {
-                        if (chatInfo.get()) ChatUtils.moduleWarning(this, "No obsidian found for support, mining anyway.");
+                        if (chatInfo.get()) warning("No obsidian found for support, mining anyway.");
                     }
                     else {
                         BlockUtils.place(blockPos, Hand.MAIN_HAND, obbySlot, rotate.get(), 0, true);

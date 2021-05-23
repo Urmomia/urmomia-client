@@ -36,7 +36,7 @@ public class NbtCommand extends Command {
                     stack.getTag().copyFrom(tag);
                     setStack(stack);
                 } else {
-                    ChatUtils.prefixError("NBT", "Some of the NBT data could not be found, try using: " + Config.get().prefix + "nbt set {nbt}");
+                    error( "Some of the NBT data could not be found, try using: " + Config.get().prefix + "nbt set {nbt}");
                 }
             }
             return SINGLE_SUCCESS;
@@ -61,7 +61,7 @@ public class NbtCommand extends Command {
         builder.then(literal("get").executes(s -> {
             ItemStack stack = mc.player.inventory.getMainHandStack();
             if (stack == null) {
-                ChatUtils.prefixError("NBT", "You must hold an item in your main hand.");
+                error( "You must hold an item in your main hand.");
             } else {
                 CompoundTag tag = stack.getTag();
                 String nbt = tag == null ? "none" : tag.asString();
@@ -89,11 +89,11 @@ public class NbtCommand extends Command {
         builder.then(literal("copy").executes(s -> {
             ItemStack stack = mc.player.inventory.getMainHandStack();
             if (stack == null) {
-                ChatUtils.prefixError("NBT","You must hold an item in your main hand.");
+                error("You must hold an item in your main hand.");
             } else {
                 CompoundTag tag = stack.getTag();
                 if (tag == null)
-                    ChatUtils.prefixError("NBT","No NBT data on this item.");
+                    error("No NBT data on this item.");
                 else {
                     mc.keyboard.setClipboard(tag.toString());
                     BaseText nbt = new LiteralText("NBT");
@@ -120,7 +120,7 @@ public class NbtCommand extends Command {
                 int count = IntegerArgumentType.getInteger(context, "count");
                 stack.setCount(count);
                 setStack(stack);
-                ChatUtils.prefixInfo("NBT", "Set mainhand stack count to " + count + ".");
+                info("Set mainhand stack count to " + count + ".");
             }
 
             return SINGLE_SUCCESS;
@@ -133,12 +133,12 @@ public class NbtCommand extends Command {
 
     private boolean validBasic(ItemStack stack) {
         if (!mc.player.abilities.creativeMode) {
-            ChatUtils.prefixError("NBT","Creative mode only.");
+            error("Creative mode only.");
             return false;
         }
 
         if (stack == null) {
-            ChatUtils.prefixError("NBT","You must hold an item in your main hand.");
+            error("You must hold an item in your main hand.");
             return false;
         }
         return true;
