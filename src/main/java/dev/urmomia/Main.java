@@ -17,18 +17,20 @@ public class Main {
 
         int option = JOptionPane.showOptionDialog(
                 null,
-                "To install Urmomia Client you need to put it in your mods folder and run Fabric for latest Minecraft version.",
+                "To install Urmomia Client you need the latest Fabric API and put it in your mods folder and run Fabric for latest Minecraft version.",
                 "Urmomia Client",
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.ERROR_MESSAGE,
                 null,
-                new String[] { "Open Fabric link", "Open mods folder", "die" },
+                new String[] { "Open Fabric link", "Install Fabirc API", "Open mods folder", "die" },
                 null
         );
 
         if (option == 0) {
             openUrl("http://fabricmc.net");
         } else if (option == 1) {
+            openUrl("http://www.curseforge.com/minecraft/mc-mods/fabric-api/files");
+        } else if (option == 2) {
             String os = System.getProperty("os.name").toLowerCase();
 
             try {
@@ -52,10 +54,10 @@ public class Main {
                 e.printStackTrace();
             }
         } else if (option == 2) {
-            openUrl("https://github.com/honsda");
-            openUrl("https://github.com/ChompChompDead");
-            openUrl("https://github.com/Codex1729");
-            openUrl("https://github.com/ProfKambing");
+            openUrl("http://github.com/honsda");
+            openUrl("http://github.com/ChompChompDead");
+            openUrl("http://github.com/Codex1729");
+            openUrl("http://github.com/ProfKambing");
         }
     }
 
