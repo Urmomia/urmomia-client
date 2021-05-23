@@ -1,5 +1,7 @@
 package dev.urmomia.gui;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import dev.urmomia.gui.renderer.GuiRenderer;
 import dev.urmomia.gui.screens.settings.*;
 import dev.urmomia.gui.utils.SettingsWidgetFactory;
@@ -14,7 +16,9 @@ import dev.urmomia.gui.widgets.pressable.WCheckbox;
 import dev.urmomia.settings.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static dev.urmomia.utils.Utils.mc;
@@ -57,26 +61,39 @@ public class DefaultSettingsWidgetFactory implements SettingsWidgetFactory {
     @Override
     public WWidget create(GuiTheme theme, Settings settings, String filter) {
         WVerticalList list = theme.verticalList();
+        List<RemoveInfo> removeInfoList = new ArrayList<>();
 
+        // Add all settings
         for (SettingGroup group : settings.groups) {
-            group(list, group, filter);
+            group(list, group, filter, removeInfoList);
         }
+        // Calculate width and set it as minimum width
+        list.calculateSize();
+        list.minWidth = list.width;
+
+        // Remove hidden settings
+        for (RemoveInfo removeInfo : removeInfoList) removeInfo.remove(list);
+
 
         return list;
     }
 
-    private void group(WVerticalList list, SettingGroup group, String filter) {
+    private void group(WVerticalList list, SettingGroup group, String filter, List<RemoveInfo> removeInfoList) {
         WSection section = list.add(theme.section(group.name, group.sectionExpanded)).expandX().widget();
         section.action = () -> group.sectionExpanded = section.isExpanded();
 
         WTable table = section.add(theme.table()).expandX().widget();
+        RemoveInfo removeInfo = null;
 
         for (Setting<?> setting : group) {
             if (!StringUtils.containsIgnoreCase(setting.title, filter)) continue;
 
             boolean visible = setting.isVisible();
             setting.lastWasVisible = visible;
-            if (!visible) continue;
+            if (!visible) {
+                if (removeInfo == null) removeInfo = new RemoveInfo(section, table);
+                removeInfo.markRowForRemoval();
+            }
 
             table.add(theme.label(setting.title)).widget().tooltip = setting.description;
 
@@ -86,7 +103,30 @@ public class DefaultSettingsWidgetFactory implements SettingsWidgetFactory {
             table.row();
         }
 
-        if (table.cells.isEmpty()) list.cells.remove(list.cells.size() - 1);
+        if (removeInfo != null) removeInfoList.add(removeInfo);
+    }
+
+    private static class RemoveInfo {
+        private final WSection section;
+        private final WTable table;
+        private final IntList rowIds = new IntArrayList();
+
+        public RemoveInfo(WSection section, WTable table) {
+            this.section = section;
+            this.table = table;
+        }
+
+        public void markRowForRemoval() {
+            rowIds.add(table.rowI());
+        }
+
+        public void remove(WVerticalList list) {
+            for (int i = 0; i < rowIds.size(); i++) {
+                table.removeRow(rowIds.getInt(i) - i);
+            }
+
+            if (table.cells.isEmpty()) list.cells.removeIf(cell -> cell.widget() == section);
+        }
     }
 
     // Settings

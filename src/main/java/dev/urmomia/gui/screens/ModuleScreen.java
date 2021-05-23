@@ -11,8 +11,6 @@ import dev.urmomia.gui.widgets.containers.WContainer;
 import dev.urmomia.gui.widgets.containers.WHorizontalList;
 import dev.urmomia.gui.widgets.containers.WSection;
 import dev.urmomia.gui.widgets.pressable.WCheckbox;
-import dev.urmomia.settings.Setting;
-import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.utils.Utils;
@@ -81,22 +79,7 @@ public class ModuleScreen extends WindowScreen {
     @Override
     public void tick() {
         super.tick();
-
-        for (SettingGroup group : module.settings) {
-            for (Setting<?> setting : group) {
-                boolean visible = setting.isVisible();
-
-                if (visible != setting.lastWasVisible) {
-                    settings.clear();
-                    settings.add(theme.settings(module.settings)).expandX();
-
-                    setting.lastWasVisible = visible;
-                    return;
-                }
-
-                setting.lastWasVisible = visible;
-            }
-        }
+        module.settings.tick(settings, theme);
     }
 
     @EventHandler

@@ -1,5 +1,7 @@
 package dev.urmomia.settings;
 
+import dev.urmomia.gui.GuiTheme;
+import dev.urmomia.gui.widgets.containers.WContainer;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.utils.misc.ISerializable;
 import dev.urmomia.utils.misc.NbtUtils;
@@ -93,6 +95,24 @@ public class Settings implements ISerializable<Settings>, Iterable<SettingGroup>
         CompoundTag tag = new CompoundTag();
         tag.put("groups", NbtUtils.listToTag(groups));
         return tag;
+    }
+
+    public void tick(WContainer settings, GuiTheme theme) {
+        for (SettingGroup group : groups) {
+            for (Setting<?> setting : group) {
+                boolean visible = setting.isVisible();
+
+                if (visible != setting.lastWasVisible) {
+                    settings.clear();
+                    settings.add(theme.settings(this)).expandX();
+
+                    setting.lastWasVisible = visible;
+                    return;
+                }
+
+                setting.lastWasVisible = visible;
+            }
+        }
     }
 
     @Override

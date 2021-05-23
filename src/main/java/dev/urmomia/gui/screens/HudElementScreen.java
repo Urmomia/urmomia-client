@@ -9,20 +9,27 @@ import dev.urmomia.gui.widgets.pressable.WButton;
 import dev.urmomia.gui.widgets.pressable.WCheckbox;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.render.hud.HUD;
+import dev.urmomia.gui.widgets.containers.WContainer;
 import dev.urmomia.systems.modules.render.hud.modules.HudElement;
 
 import static dev.urmomia.utils.Utils.getWindowWidth;
 
 public class HudElementScreen extends WindowScreen {
+    private final HudElement element;
+    private WContainer settings;
+
     public HudElementScreen(GuiTheme theme, HudElement element) {
         super(theme, element.title);
+        this.element = element;
 
         // Description
         add(theme.label(element.description, getWindowWidth() / 2.0));
 
         // Settings
         if (element.settings.sizeGroups() > 0) {
-            add(theme.settings(element.settings)).expandX();
+            settings = add(theme.verticalList()).expandX().widget();
+            settings.add(theme.settings(element.settings)).expandX();
+
 
             add(theme.horizontalSeparator()).expandX();
         }
@@ -41,6 +48,15 @@ public class HudElementScreen extends WindowScreen {
         reset.action = () -> {
             if (element.active != element.defaultActive) element.active = active.checked = element.defaultActive;
         };
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (settings == null) return;
+
+        element.settings.tick(settings, theme);
     }
 
     @Override

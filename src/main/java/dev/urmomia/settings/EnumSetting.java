@@ -1,5 +1,6 @@
 package dev.urmomia.settings;
 
+import dev.urmomia.gui.widgets.input.WDropdown;
 import net.minecraft.nbt.CompoundTag;
 
 import java.lang.reflect.InvocationTargetException;

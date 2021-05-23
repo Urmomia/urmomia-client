@@ -12,7 +12,6 @@ import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.misc.Pool;
 import dev.urmomia.utils.render.ByteTexture;
 import dev.urmomia.utils.render.color.Color;
-import dev.urmomia.utils.render.color.SettingColor;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.util.Identifier;
@@ -187,7 +186,7 @@ public class GuiRenderer {
         mb.quad(x, y, width, height, cTopLeft, cTopRight, cBottomRight, cBottomLeft);
     }
     public void quad(double x, double y, double width, double height, Color colorLeft, Color colorRight) {
-        quad(x, y, width, height, colorLeft, colorLeft, colorRight, colorLeft);
+        quad(x, y, width, height, colorLeft, colorRight, colorRight, colorLeft);
     }
     public void quad(double x, double y, double width, double height, Color color) {
         quad(x, y, width, height, color, color);
