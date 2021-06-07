@@ -3,7 +3,7 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Urmomia/Urmomia-Client)
 ![GitHub contributors](https://img.shields.io/github/contributors/Urmomia/Urmomia-Client)
 ![ver](https://img.shields.io/badge/Working%20on-m0.7.3-blueviolet)
-[![GitHub All Releases](https://img.shields.io/github/downloads/codex1729/urmomia/total.svg)](https://github.com/codex1729/urmomia/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/codex1729/urmomia/total.svg)](https://github.com/Urmomia/urmomia-client/releases)
 
 urmomia strong, oa based clients strong
 
