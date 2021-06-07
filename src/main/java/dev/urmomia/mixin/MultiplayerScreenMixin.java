@@ -50,9 +50,11 @@ public class MultiplayerScreenMixin extends Screen {
             client.openScreen(GuiThemes.get().proxiesScreen());
         }));
 
-        addButton(new ButtonWidget(3, this.height - 35 - 3, 75, 20, new LiteralText("Toggle AL"), button -> {
-            Modules.get().get(AutoLogin.class).toggle();
+        addButton(new ButtonWidget(3, this.height - 35 - 3, 75, 20, new LiteralText("AutoLogin"), button -> {
+            client.openScreen(GuiThemes.get().alScreen());
         }));
+
+        if (AutoLogin.said == 1) AutoLogin.said = 0;
     }
 
     @Inject(method = "render", at = @At("TAIL"))

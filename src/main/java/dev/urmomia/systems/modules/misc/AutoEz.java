@@ -79,13 +79,12 @@ public class AutoEz extends Module {
             return;
         }
 
+        if (said == 1) said = 0;
+
         synchronized (totemPops) {
             for (PlayerEntity player : mc.world.getPlayers()) {
                 if (!totemPops.containsKey(player.getUuid())) continue;
-                if (player.distanceTo(mc.player) < 4) {
-                    said = 0;
-                    continue;
-                }
+                if (player.distanceTo(mc.player) < 4) continue;
 
                 if (said == 0 && player.deathTime > 0 || player.getHealth() <= 0) {
                     String fart = farte(ezed, player);
