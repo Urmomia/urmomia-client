@@ -10,7 +10,6 @@ import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.systems.modules.Modules;
-import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.InvUtils;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.gui.screen.ingame.HorseScreen;
