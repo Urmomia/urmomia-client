@@ -19,7 +19,7 @@ public class LoginScreen extends WindowScreen {
 
         // Pass
         t.add(theme.label("Pass: "));
-        WTextBox name = t.add(theme.textBox("")).minWidth(400).expandX().widget();
+        WTextBox name = t.add(theme.textBox(AutoLogin.passw)).minWidth(400).expandX().widget();
         name.setFocused(true);
         t.row();
 
