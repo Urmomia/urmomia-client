@@ -1,5 +1,7 @@
 package dev.urmomia.gui.screens;
 
+import static dev.urmomia.utils.Utils.mc;
+
 import dev.urmomia.gui.GuiTheme;
 import dev.urmomia.gui.WindowScreen;
 import dev.urmomia.gui.widgets.containers.WHorizontalList;
@@ -19,25 +21,25 @@ public class LoginScreen extends WindowScreen {
 
         // Pass
         t.add(theme.label("Pass: "));
-        WTextBox name = t.add(theme.textBox(AutoLogin.passw)).minWidth(400).expandX().widget();
+        WTextBox name = t.add(theme.textBox(Modules.get().get(AutoLogin.class).passx.get())).minWidth(400).expandX().widget();
         name.setFocused(true);
         t.row();
-
-        WButton add = t.add(theme.button("Change")).expandX().widget();
-        add.action = () -> {
-            AutoLogin.oven(name.get());
+        
+        t.add(theme.label("Active: "));
+        WCheckbox active = t.add(theme.checkbox(Modules.get().get(AutoLogin.class).isActive())).expandCellX().widget();
+        active.action = () -> {
+            if (Modules.get().get(AutoLogin.class).isActive() != active.checked) Modules.get().get(AutoLogin.class).toggle(Utils.canUpdate());
         };
 
         // Bottom
         WHorizontalList b = add(theme.horizontalList()).expandX().widget();
-
-        // AL Active
-        b.add(theme.label("Active: "));
-        WCheckbox active = b.add(theme.checkbox(Modules.get().get(AutoLogin.class).isActive())).expandCellX().widget();
-        active.action = () -> {
-            if (Modules.get().get(AutoLogin.class).isActive() != active.checked) Modules.get().get(AutoLogin.class).toggle(Utils.canUpdate());
+        WButton add = b.add(theme.button("Change")).expandX().widget();
+        add.action = () -> {
+            Modules.get().get(AutoLogin.class).floppa(name.get());
         };
-        
+        WButton the = t.add(theme.button("Accounts")).expandX().widget();
+        the.action = () -> { mc.openScreen(new AccountsScreen(theme));};
+
         enterAction = add.action;
     }
 }

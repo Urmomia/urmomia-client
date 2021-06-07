@@ -1,26 +1,33 @@
 package dev.urmomia.systems.modules.combat;
 
-import meteordevelopment.orbit.EventHandler;
+import java.util.ArrayList;
+
 import dev.urmomia.events.game.OpenScreenEvent;
 import dev.urmomia.events.world.TickEvent;
-import dev.urmomia.settings.*;
+import dev.urmomia.settings.BoolSetting;
+import dev.urmomia.settings.DoubleSetting;
+import dev.urmomia.settings.IntSetting;
+import dev.urmomia.settings.Setting;
+import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.friends.Friends;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.utils.entity.fakeplayer.FakePlayerEntity;
 import dev.urmomia.utils.entity.fakeplayer.FakePlayerManager;
-import dev.urmomia.utils.player.ChatUtils;
 import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.world.BlockUtils;
-import net.minecraft.block.*;
+import meteordevelopment.orbit.EventHandler;
+import net.minecraft.block.AbstractButtonBlock;
+import net.minecraft.block.AbstractPressurePlateBlock;
+import net.minecraft.block.AnvilBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.ArrayList;
 
 // Created by Eureka
 

@@ -4,10 +4,23 @@ import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.game.GameJoinedEvent;
 import dev.urmomia.events.game.GameLeftEvent;
 import dev.urmomia.events.world.TickEvent;
+import dev.urmomia.settings.Setting;
+import dev.urmomia.settings.SettingGroup;
+import dev.urmomia.settings.StringSetting;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 
 public class AutoLogin extends Module {
+
+    private final SettingGroup sgGeneral = settings.getDefaultGroup();
+    
+    public final Setting<String> passx = sgGeneral.add(new StringSetting.Builder()
+            .name("text")
+            .description("The AuthMe Password you want to use.")
+            .defaultValue("pass123")
+            .onChanged(booleanSetting -> oven())
+            .build()
+    );
     
     private int ticks;
     private int d;
@@ -61,7 +74,12 @@ public class AutoLogin extends Module {
         if (said == 0 && joins == 1 && d == 0 && ticks >= 30) mc.player.sendChatMessage("/login " + passw); said = 1;
     }
 
-    public static void oven(String pass) {
-        passw = pass;
+    public void oven() {
+        passw = passx.get();
+    }
+
+    public void floppa(String pass) {
+        passx.set(pass);
+        oven();
     }
 }

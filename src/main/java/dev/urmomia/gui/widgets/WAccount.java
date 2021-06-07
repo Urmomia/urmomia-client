@@ -1,8 +1,3 @@
-/*
-
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.gui.widgets;
 
 import dev.urmomia.gui.WidgetScreen;
@@ -12,7 +7,6 @@ import dev.urmomia.gui.widgets.pressable.WMinus;
 import dev.urmomia.systems.accounts.Account;
 import dev.urmomia.systems.accounts.Accounts;
 import dev.urmomia.utils.network.MainExecutor;
-//import dev.urmomia.utils.network.OnlinePlayers;
 import dev.urmomia.utils.render.color.Color;
 
 import static dev.urmomia.utils.Utils.mc;
