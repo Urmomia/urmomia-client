@@ -131,7 +131,6 @@ public class MainClient implements ClientModInitializer {
     public static boolean hudWasOn = false;
 
     private void openClickGui() {
-        if (Modules.get().get(HUD.class).isActive()) Modules.get().get(HUD.class).toggle(); hudWasOn = true;
         Tabs.get().get(0).openScreen(GuiThemes.get());
     }
 

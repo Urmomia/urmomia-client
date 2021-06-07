@@ -12,7 +12,7 @@ public class AutoLogin extends Module {
     private int ticks;
     private int d;
     private int joins;
-    private int said;
+    public static int said;
 
     private static String passw;
 

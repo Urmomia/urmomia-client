@@ -2,6 +2,7 @@ package dev.urmomia.gui;
 
 import dev.urmomia.gui.renderer.packer.GuiTexture;
 import dev.urmomia.gui.screens.AccountsScreen;
+import dev.urmomia.gui.screens.LoginScreen;
 import dev.urmomia.gui.screens.ModuleScreen;
 import dev.urmomia.gui.screens.ModulesScreen;
 import dev.urmomia.gui.screens.ProxiesScreen;
@@ -193,6 +194,10 @@ public abstract class GuiTheme implements ISerializable<GuiTheme> {
 
     public WidgetScreen proxiesScreen() {
         return new ProxiesScreen(this);
+    }
+
+    public WidgetScreen alScreen() {
+        return new LoginScreen(this);
     }
     
     // Colors
