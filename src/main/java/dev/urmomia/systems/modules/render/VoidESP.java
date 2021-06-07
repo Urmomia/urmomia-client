@@ -5,23 +5,28 @@
 
 package dev.urmomia.systems.modules.render;
 
-import meteordevelopment.orbit.EventHandler;
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.urmomia.events.render.RenderEvent;
 import dev.urmomia.events.world.TickEvent;
 import dev.urmomia.rendering.Renderer;
 import dev.urmomia.rendering.ShapeMode;
-import dev.urmomia.settings.*;
+import dev.urmomia.settings.BoolSetting;
+import dev.urmomia.settings.ColorSetting;
+import dev.urmomia.settings.EnumSetting;
+import dev.urmomia.settings.IntSetting;
+import dev.urmomia.settings.Setting;
+import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.Utils;
+import dev.urmomia.utils.player.PlayerUtils;
 import dev.urmomia.utils.render.color.SettingColor;
 import dev.urmomia.utils.world.Dimension;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VoidESP extends Module {
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
@@ -85,7 +90,7 @@ public class VoidESP extends Module {
 
     private void getHoles(int searchRange, int holeHeight) {
         voidHoles.clear();
-        if (Utils.getDimension() == Dimension.End) return;
+        if (PlayerUtils.getDimension() == Dimension.End) return;
 
         BlockPos playerPos = mc.player.getBlockPos();
         int playerY = playerPos.getY();
@@ -102,7 +107,7 @@ public class VoidESP extends Module {
                 if (blocksFromBottom >= holeHeight) voidHoles.add(bottomBlockPos);
 
                 // checking nether roof
-                if (Utils.getDimension() == Dimension.Nether) {
+                if (PlayerUtils.getDimension() == Dimension.Nether) {
                     BlockPos topBlockPos = playerPos.add(x, 127 - playerY, z);
 
                     int blocksFromTop = 0;

@@ -1,5 +1,12 @@
 package dev.urmomia.systems.commands.commands;
 
+import static com.mojang.brigadier.Command.SINGLE_SUCCESS;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -8,19 +15,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+
 import dev.urmomia.systems.commands.Command;
 import dev.urmomia.systems.profiles.Profile;
 import dev.urmomia.systems.profiles.Profiles;
-import dev.urmomia.utils.player.ChatUtils;
 import net.minecraft.command.CommandSource;
 import net.minecraft.text.LiteralText;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
-import static com.mojang.brigadier.Command.SINGLE_SUCCESS;
 
 public class ProfileCommand extends Command {
 

@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.player;
 
 import dev.urmomia.settings.Setting;
@@ -17,7 +12,7 @@ public class NameProtect extends Module {
     private final Setting<String> name = sgGeneral.add(new StringSetting.Builder()
             .name("name")
             .description("Name to be replaced with.")
-            .defaultValue("squidoodly")
+            .defaultValue("noobmaster69")
             .build()
     );
 

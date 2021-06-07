@@ -1,8 +1,12 @@
 package dev.urmomia;
 
-import meteordevelopment.orbit.EventBus;
-import meteordevelopment.orbit.EventHandler;
-import meteordevelopment.orbit.IEventBus;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import dev.urmomia.events.game.GameLeftEvent;
 import dev.urmomia.events.meteor.CharTypedEvent;
 import dev.urmomia.events.meteor.ClientInitialisedEvent;
@@ -21,7 +25,6 @@ import dev.urmomia.systems.config.Config;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.misc.DiscordPresence;
-import dev.urmomia.systems.modules.render.hud.HUD;
 import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.misc.FakeClientPlayer;
 import dev.urmomia.utils.misc.MeteorPlayers;
@@ -35,6 +38,9 @@ import dev.urmomia.utils.player.Rotations;
 import dev.urmomia.utils.render.color.RainbowColors;
 import dev.urmomia.utils.world.BlockIterator;
 import dev.urmomia.utils.world.BlockUtils;
+import meteordevelopment.orbit.EventBus;
+import meteordevelopment.orbit.EventHandler;
+import meteordevelopment.orbit.IEventBus;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
@@ -42,12 +48,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainClient implements ClientModInitializer {
     public static MainClient INSTANCE;

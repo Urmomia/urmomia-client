@@ -1,5 +1,6 @@
 package dev.urmomia.systems.modules.render.hud.modules;
 
+import dev.urmomia.mixin.WorldRendererAccessor;
 import dev.urmomia.rendering.DrawMode;
 import dev.urmomia.rendering.Renderer;
 import dev.urmomia.settings.BlockListSetting;
@@ -11,7 +12,6 @@ import dev.urmomia.systems.modules.render.hud.HudRenderer;
 import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.render.RenderUtils;
 import dev.urmomia.utils.render.color.Color;
-import dev.urmomia.utils.world.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.VertexFormats;
@@ -70,13 +70,13 @@ public class HoleHud extends HudElement {
 
     private void drawBlock(Direction dir, double x, double y) {
         Block block = dir == Direction.DOWN ? Blocks.OBSIDIAN : mc.world.getBlockState(mc.player.getBlockPos().offset(dir)).getBlock();
-        if (!safe.get().contains(block)) block = Blocks.AIR;
+        if (!safe.get().contains(block)) return;
 
         RenderUtils.drawItem(block.asItem().getDefaultStack(), (int) x, (int) y, scale.get(),false);
 
         if (dir == Direction.DOWN) return;
 
-        BlockUtils.breakingBlocks.values().forEach(info -> {
+        ((WorldRendererAccessor) mc.worldRenderer).getBlockBreakingInfos().values().forEach(info -> {
             if (info.getPos().equals(mc.player.getBlockPos().offset(dir))) {
                 renderBreaking(x, y, info.getStage() / 9f);
             }

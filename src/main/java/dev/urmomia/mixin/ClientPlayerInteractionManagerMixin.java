@@ -1,11 +1,7 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.mixin;
 
 import dev.urmomia.MainClient;
+import dev.urmomia.events.entity.DropItemsEvent;
 import dev.urmomia.events.entity.player.AttackEntityEvent;
 import dev.urmomia.events.entity.player.BreakBlockEvent;
 import dev.urmomia.events.entity.player.InteractItemEvent;
@@ -18,6 +14,8 @@ import dev.urmomia.systems.modules.world.Nuker;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +35,22 @@ public abstract class ClientPlayerInteractionManagerMixin implements IClientPlay
     @Shadow private int blockBreakingCooldown;
 
     @Shadow protected abstract void syncSelectedSlot();
+
+    @Inject(method = "clickSlot", at = @At("HEAD"), cancellable = true)
+    private void onClickSlot(int syncId, int slotId, int clickData, SlotActionType actionType, PlayerEntity player, CallbackInfoReturnable<ItemStack> info) {
+        if (actionType == SlotActionType.THROW && slotId >= 0 && slotId < player.currentScreenHandler.slots.size()) {
+            if (MainClient.EVENT_BUS.post(DropItemsEvent.get(player.currentScreenHandler.slots.get(slotId).getStack())).isCancelled()) info.setReturnValue(ItemStack.EMPTY);
+        }
+        else if (slotId == -999) {
+            // Clicking outside of inventory
+            if (MainClient.EVENT_BUS.post(DropItemsEvent.get(player.inventory.getCursorStack())).isCancelled()) info.setReturnValue(ItemStack.EMPTY);
+        }
+    }
+
+    @Inject(method = "dropCreativeStack", at = @At("HEAD"), cancellable = true)
+    private void onDropCreativeStack(ItemStack stack, CallbackInfo info) {
+        if (MainClient.EVENT_BUS.post(DropItemsEvent.get(stack)).isCancelled()) info.cancel();
+    }
 
     @Inject(method = "attackEntity", at = @At("HEAD"), cancellable = true)
     private void onAttackEntity(PlayerEntity player, Entity target, CallbackInfo info) {

@@ -1,10 +1,13 @@
 package dev.urmomia.systems.modules.render;
 
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.events.render.RenderEvent;
-import dev.urmomia.settings.*;
-import dev.urmomia.systems.friends.Friends;
+import dev.urmomia.settings.BoolSetting;
+import dev.urmomia.settings.ColorSetting;
+import dev.urmomia.settings.EntityTypeListSetting;
+import dev.urmomia.settings.EnumSetting;
+import dev.urmomia.settings.IntSetting;
+import dev.urmomia.settings.Setting;
+import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.systems.modules.Modules;
@@ -15,6 +18,8 @@ import dev.urmomia.utils.player.PlayerUtils;
 import dev.urmomia.utils.render.RenderUtils;
 import dev.urmomia.utils.render.color.Color;
 import dev.urmomia.utils.render.color.SettingColor;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;

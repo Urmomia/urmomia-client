@@ -115,7 +115,7 @@ public class Auto32K extends Module {
                     mc.player.setSneaking(true);
                     mc.player.inventory.selectedSlot = shulkerSlot;
                     if (!PlayerUtils.placeBlock(bestBlock.up(), Hand.MAIN_HAND)) {
-                        Utils.sendMessage("#redFailed to place.");
+                        error("Failed to place.");
                         this.toggle();
                         return;
                     }
@@ -135,7 +135,7 @@ public class Auto32K extends Module {
                     mc.player.inventory.selectedSlot = hopperSlot;
                     if(bestBlock == null) return;
                     if (!PlayerUtils.placeBlock(bestBlock.add(x, 0, z), Hand.MAIN_HAND)) {
-                        Utils.sendMessage("#redFailed to place.");
+                        error("Failed to place.");
                         this.toggle();
                         return;
                     }

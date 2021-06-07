@@ -14,7 +14,7 @@ public class AutoLogin extends Module {
     private int joins;
     public static int said;
 
-    private static String passw;
+    public static String passw;
 
     public AutoLogin() {
         super(Categories.Misc, "auto-login", "Automatically login in AuthMe servers when you join.");
@@ -27,7 +27,7 @@ public class AutoLogin extends Module {
         joins = 0;
         said = 0;
     }
-//pee
+
     @Override
     public void onDeactivate() {
         ticks = 0;

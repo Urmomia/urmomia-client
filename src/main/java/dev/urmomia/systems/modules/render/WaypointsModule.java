@@ -24,6 +24,7 @@ import dev.urmomia.systems.modules.Module;
 import dev.urmomia.systems.waypoints.Waypoint;
 import dev.urmomia.systems.waypoints.Waypoints;
 import dev.urmomia.utils.Utils;
+import dev.urmomia.utils.player.PlayerUtils;
 import dev.urmomia.utils.render.color.Color;
 import dev.urmomia.utils.world.Dimension;
 import net.minecraft.client.MinecraftClient;
@@ -63,7 +64,7 @@ public class WaypointsModule extends Module {
             // Name
             WLabel name = table.add(theme.label(waypoint.name)).expandCellX().widget();
             boolean goodDimension = false;
-            Dimension dimension = Utils.getDimension();
+            Dimension dimension = PlayerUtils.getDimension();
             if (waypoint.overworld && dimension == Dimension.Overworld) goodDimension = true;
             else if (waypoint.nether && dimension == Dimension.Nether) goodDimension = true;
             else if (waypoint.end && dimension == Dimension.End) goodDimension = true;
@@ -127,9 +128,9 @@ public class WaypointsModule extends Module {
                 this.waypoint.y = (int) mc.player.getY() + 2;
                 this.waypoint.z = (int) mc.player.getZ();
 
-                this.waypoint.actualDimension = Utils.getDimension();
+                this.waypoint.actualDimension = PlayerUtils.getDimension();
 
-                switch (Utils.getDimension()) {
+                switch (PlayerUtils.getDimension()) {
                     case Overworld: this.waypoint.overworld = true; break;
                     case Nether:    this.waypoint.nether = true; break;
                     case End:       this.waypoint.end = true; break;

@@ -73,6 +73,8 @@ public class Modules extends System<Modules> {
         initRender();
         initWorld();
         initMisc();
+
+        add(new HUD());
     }
 
     public void sortModules() {
@@ -394,6 +396,7 @@ public class Modules extends System<Modules> {
         add(new AutoDrop());
         add(new AutoFish());
         add(new AutoMend());
+        add(new AutoMatrixDupe());
         add(new AutoReplenish());
         add(new AutoRespawn());
         add(new AutoTool());
@@ -429,6 +432,7 @@ public class Modules extends System<Modules> {
         add(new AntiLevitation());
         add(new AutoJump());
         add(new Sprint());
+        add(new Sneak());
         add(new AutoWalk());
         add(new Blink());
         add(new BoatFly());
@@ -609,10 +613,10 @@ public class Modules extends System<Modules> {
 
         @Override
         public Iterator<Module> iterator() {
-            return new ToggleModuleIterator();
+            return new ModuleIterator();
         }
 
-        private static class ToggleModuleIterator implements Iterator<Module> {
+        private static class ModuleIterator implements Iterator<Module> {
             private final Iterator<Module> iterator = Modules.get().getAll().iterator();
 
             @Override

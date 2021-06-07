@@ -20,7 +20,7 @@ import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
 import dev.urmomia.systems.waypoints.Waypoint;
 import dev.urmomia.systems.waypoints.Waypoints;
-import dev.urmomia.utils.Utils;
+import dev.urmomia.utils.player.PlayerUtils;
 import dev.urmomia.utils.player.ChatUtils;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.gui.screen.DeathScreen;
@@ -100,9 +100,9 @@ public class DeathPosition extends Module {
             waypoint.y = (int) dmgPos.y + 2;
             waypoint.z = (int) dmgPos.z;
             waypoint.maxVisibleDistance = Integer.MAX_VALUE;
-            waypoint.actualDimension = Utils.getDimension();
+            waypoint.actualDimension = PlayerUtils.getDimension();
 
-            switch (Utils.getDimension()) {
+            switch (PlayerUtils.getDimension()) {
                 case Overworld:
                     waypoint.overworld = true;
                     break;

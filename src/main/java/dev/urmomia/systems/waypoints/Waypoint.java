@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.waypoints;
 
 import dev.urmomia.rendering.DrawMode;
@@ -24,7 +19,7 @@ public class Waypoint implements ISerializable<Waypoint> {
         MB.texture = true;
     }
 
-    public String name = "Insert [common urmomian name]";
+    public String name = "my lovely base uwu";
     public String icon = "Square";
     public SettingColor color = new SettingColor(138,48,255);
 

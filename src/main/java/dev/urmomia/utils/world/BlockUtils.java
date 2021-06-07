@@ -4,6 +4,7 @@ import meteordevelopment.orbit.EventHandler;
 import dev.urmomia.MainClient;
 import dev.urmomia.events.game.GameLeftEvent;
 import dev.urmomia.mixininterface.IVec3d;
+import dev.urmomia.utils.player.InvUtils;
 import dev.urmomia.utils.player.Rotations;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
@@ -70,7 +71,7 @@ public class BlockUtils {
 
     private static void place(int slot, Vec3d hitPos, Hand hand, Direction side, BlockPos neighbour, boolean swing, boolean swap, boolean swapBack) {
         int preSlot = mc.player.inventory.selectedSlot;
-        if (swap) mc.player.inventory.selectedSlot = slot;
+        if (swap && !InvUtils.swap(slot)) return;
 
         boolean wasSneaking = mc.player.input.sneaking;
         mc.player.input.sneaking = false;
@@ -81,7 +82,7 @@ public class BlockUtils {
 
         mc.player.input.sneaking = wasSneaking;
 
-        if (swapBack) mc.player.inventory.selectedSlot = preSlot;
+        if (swapBack) InvUtils.swap(preSlot);
     }
 
     public static boolean canPlace(BlockPos blockPos, boolean checkEntities) {
@@ -102,17 +103,16 @@ public class BlockUtils {
     }
 
     public static boolean isClickable(Block block) {
-        boolean clickable = block instanceof CraftingTableBlock
+        return block instanceof CraftingTableBlock
                 || block instanceof AnvilBlock
                 || block instanceof AbstractButtonBlock
                 || block instanceof AbstractPressurePlateBlock
                 || block instanceof BlockWithEntity
+                || block instanceof BedBlock
                 || block instanceof FenceGateBlock
                 || block instanceof DoorBlock
                 || block instanceof NoteBlock
                 || block instanceof TrapdoorBlock;
-
-        return clickable;
     }
 
     private static Direction getPlaceSide(BlockPos blockPos) {

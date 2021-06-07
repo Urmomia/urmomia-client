@@ -96,6 +96,7 @@ public class HUD extends Module {
         topLeft.add(new BreakingBlockHud(this));
         topLeft.add(new LookingAtHud(this));
         topLeft.add(new ModuleInfoHud(this));
+        topLeft.add(new CompassHud(this));
 
         // Top Center
         topCenter = new HudElementLayer(RENDERER, elements, AlignmentX.Center, AlignmentY.Top, 0, 2);
@@ -117,9 +118,8 @@ public class HUD extends Module {
         bottomLeft.add(new PlayerModelHud(this));
 
         // Bottom Center
-        bottomCenter = new HudElementLayer(RENDERER, elements, AlignmentX.Center, AlignmentY.Bottom, 48, 64);
+        bottomCenter = new HudElementLayer(RENDERER, elements, AlignmentX.Center, AlignmentY.Bottom, 48, 70);
         bottomCenter.add(new ArmorHud(this));
-        bottomCenter.add(new CompassHud(this));
         bottomCenter.add(new HoleHud(this));
         bottomCenter.add(new TotemHud(this));
 

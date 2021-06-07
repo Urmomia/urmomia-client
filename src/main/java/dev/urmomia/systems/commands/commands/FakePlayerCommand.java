@@ -8,7 +8,6 @@ import dev.urmomia.systems.commands.Command;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.player.FakePlayer;
 import dev.urmomia.utils.entity.fakeplayer.FakePlayerManager;
-import dev.urmomia.utils.player.ChatUtils;
 import net.minecraft.command.CommandSource;
 
 import static com.mojang.brigadier.Command.SINGLE_SUCCESS;
@@ -21,7 +20,7 @@ public class FakePlayerCommand extends Command {
     @Override
     public void build(LiteralArgumentBuilder<CommandSource> builder) {
         builder.then(literal("spawn").executes(context -> {
-            if (active()) FakePlayerManager.add("peefart cheesecake butt", 36, true);
+            if (active()) FakePlayerManager.add("peefart", 36, true);
             return SINGLE_SUCCESS;
         })
                         .then(argument("name", StringArgumentType.word())

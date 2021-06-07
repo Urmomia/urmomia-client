@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.player;
 
 import meteordevelopment.orbit.EventHandler;
@@ -279,7 +274,7 @@ public class AntiAFK extends Module {
             ListTag messagesTag = tag.getList("messages", 8);
             for (Tag messageTag : messagesTag) messages.add(messageTag.asString());
         } else {
-            messages.add("This is an AntiAFK message. Meteor on Crack!");
+            messages.add("uwu");
         }
 
         return super.fromTag(tag);

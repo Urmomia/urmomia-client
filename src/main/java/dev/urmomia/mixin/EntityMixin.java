@@ -9,6 +9,7 @@ import dev.urmomia.systems.modules.combat.Hitboxes;
 import dev.urmomia.systems.modules.movement.NoSlow;
 import dev.urmomia.systems.modules.movement.Velocity;
 import dev.urmomia.systems.modules.render.ESP;
+import dev.urmomia.systems.modules.render.NoRender;
 import dev.urmomia.utils.Utils;
 import dev.urmomia.utils.render.Outlines;
 import net.minecraft.block.Block;
@@ -28,9 +29,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
@@ -42,37 +45,26 @@ public abstract class EntityMixin {
 
     @Shadow public abstract void setVelocity(double x, double y, double z);
 
-    @Inject(method = "setVelocityClient", at = @At("HEAD"), cancellable = true)
-    private void onSetVelocityClient(double x, double y, double z, CallbackInfo info) {
-        PlayerEntity player = MinecraftClient.getInstance().player;
-        if (((Object) this) != player) return;
-
-        Velocity velocity = Modules.get().get(Velocity.class);
-        if (!velocity.isActive() || !velocity.entities.get()) return;
-
-        double deltaX = x - player.getVelocity().x;
-        double deltaY = y - player.getVelocity().y;
-        double deltaZ = z - player.getVelocity().z;
-
-        setVelocity(
-                player.getVelocity().x + deltaX * velocity.getHorizontal(),
-                player.getVelocity().y + deltaY * velocity.getVertical(),
-                player.getVelocity().z + deltaZ * velocity.getHorizontal()
-        );
-
-        info.cancel();
-    }
-
     @Redirect(method = "updateMovementInFluid", at = @At(value = "INVOKE", target = "Lnet/minecraft/fluid/FluidState;getVelocity(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/Vec3d;"))
     private Vec3d updateMovementInFluidFluidStateGetVelocity(FluidState state, BlockView world, BlockPos pos) {
         Vec3d vec = state.getVelocity(world, pos);
 
         Velocity velocity = Modules.get().get(Velocity.class);
         if (velocity.isActive() && velocity.liquids.get()) {
-            vec = vec.multiply(velocity.getHorizontal(), velocity.getVertical(), velocity.getHorizontal());
+            vec = vec.multiply(velocity.getHorizontal(velocity.liquidsHorizontal), velocity.getVertical(velocity.liquidsVertical), velocity.getHorizontal(velocity.liquidsHorizontal));
         }
 
         return vec;
+    }
+
+    @ModifyArgs(method = "pushAwayFrom(Lnet/minecraft/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;addVelocity(DDD)V"))
+    private void onPushAwayFrom(Args args) {
+        Velocity velocity = Modules.get().get(Velocity.class);
+        if (velocity.isActive() && velocity.entityPush.get() && MinecraftClient.getInstance().player == (Object) this) {
+            double multiplier = velocity.entityPushAmount.get();
+            args.set(0, (double) args.get(0) * multiplier);
+            args.set(2, (double) args.get(2) * multiplier);
+        }
     }
 
     @Inject(method = "getJumpVelocityMultiplier", at = @At("HEAD"), cancellable = true)
@@ -85,15 +77,6 @@ public abstract class EntityMixin {
             JumpVelocityMultiplierEvent event = MainClient.EVENT_BUS.post(JumpVelocityMultiplierEvent.get());
             info.setReturnValue(a * event.multiplier);
         }
-    }
-
-    @Redirect(method = "addVelocity", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Vec3d;add(DDD)Lnet/minecraft/util/math/Vec3d;"))
-    private Vec3d addVelocityVec3dAddProxy(Vec3d vec3d, double x, double y, double z) {
-        Velocity velocity = Modules.get().get(Velocity.class);
-
-        if ((Object) this != MinecraftClient.getInstance().player || Utils.isReleasingTrident || !velocity.entities.get()) return vec3d.add(x, y, z);
-
-        return vec3d.add(x * velocity.getHorizontal(), y * velocity.getVertical(), z * velocity.getHorizontal());
     }
 
     @Inject(method = "move", at = @At("HEAD"))
@@ -118,13 +101,9 @@ public abstract class EntityMixin {
         return blockState.getBlock();
     }
 
-
     @Inject(method = "isInvisibleTo(Lnet/minecraft/entity/player/PlayerEntity;)Z", at = @At("HEAD"), cancellable = true)
     private void isInvisibleToCanceller(PlayerEntity player, CallbackInfoReturnable<Boolean> info) {
-        if (player == null) info.setReturnValue(false);
-
-        ESP esp = Modules.get().get(ESP.class);
-        if (esp.isActive() && esp.showInvis.get()) info.setReturnValue(false);
+        if (player == null || Modules.get().get(NoRender.class).noInvisibility()) info.setReturnValue(false);
     }
 
     @Inject(method = "getTargetingMargin", at = @At("HEAD"), cancellable = true)

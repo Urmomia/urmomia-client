@@ -1,34 +1,39 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.systems.modules.render;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import com.mojang.blaze3d.systems.RenderSystem;
-import meteordevelopment.orbit.EventHandler;
+
 import dev.urmomia.events.entity.EntityAddedEvent;
 import dev.urmomia.events.render.RenderEvent;
 import dev.urmomia.events.world.TickEvent;
-import dev.urmomia.rendering.*;
+import dev.urmomia.rendering.DrawMode;
+import dev.urmomia.rendering.Matrices;
+import dev.urmomia.rendering.MeshBuilder;
+import dev.urmomia.rendering.Renderer;
+import dev.urmomia.rendering.ShapeMode;
 import dev.urmomia.rendering.text.TextRenderer;
-import dev.urmomia.settings.*;
+import dev.urmomia.settings.BoolSetting;
+import dev.urmomia.settings.ColorSetting;
+import dev.urmomia.settings.DoubleSetting;
+import dev.urmomia.settings.EnumSetting;
+import dev.urmomia.settings.Setting;
+import dev.urmomia.settings.SettingGroup;
 import dev.urmomia.systems.modules.Categories;
 import dev.urmomia.systems.modules.Module;
-import dev.urmomia.utils.Utils;
+import dev.urmomia.utils.player.PlayerUtils;
 import dev.urmomia.utils.render.color.Color;
 import dev.urmomia.utils.render.color.SettingColor;
 import dev.urmomia.utils.world.Dimension;
+import meteordevelopment.orbit.EventHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class LogoutSpots extends Module {
     private static final MeshBuilder MB = new MeshBuilder(64);
@@ -113,7 +118,7 @@ public class LogoutSpots extends Module {
         updateLastPlayers();
 
         timer = 10;
-        lastDimension = Utils.getDimension();
+        lastDimension = PlayerUtils.getDimension();
     }
 
     @Override
@@ -172,7 +177,7 @@ public class LogoutSpots extends Module {
             timer--;
         }
 
-        Dimension dimension = Utils.getDimension();
+        Dimension dimension = PlayerUtils.getDimension();
         if (dimension != lastDimension) players.clear();
         lastDimension = dimension;
     }
@@ -228,7 +233,7 @@ public class LogoutSpots extends Module {
 
             // Compute scale
             double scale = 0.025;
-            double dist = Utils.distanceToCamera(x, y, z);
+            double dist = PlayerUtils.distanceToCamera(x, y, z);
             if (dist > 8) scale *= dist / 8 * LogoutSpots.this.scale.get();
 
             if (dist > mc.options.viewDistance * 16) return;

@@ -1,7 +1,5 @@
 package dev.urmomia.mixin;
 
-import javax.annotation.Nullable;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import dev.urmomia.rendering.Blur;
 import dev.urmomia.systems.modules.Modules;
 import dev.urmomia.systems.modules.render.BlockSelection;
-import dev.urmomia.systems.modules.render.BreakIndicators;
 import dev.urmomia.systems.modules.render.Chams;
 import dev.urmomia.systems.modules.render.ESP;
 import dev.urmomia.systems.modules.render.Freecam;
@@ -21,10 +18,8 @@ import dev.urmomia.systems.modules.render.NoRender;
 import dev.urmomia.systems.modules.world.Ambience;
 import dev.urmomia.utils.render.Outlines;
 import dev.urmomia.utils.render.color.Color;
-import dev.urmomia.utils.world.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.render.BlockBreakingInfo;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Frustum;
@@ -44,7 +39,7 @@ import net.minecraft.util.math.Matrix4f;
 public abstract class WorldRendererMixin {
     @Shadow protected abstract void renderEntity(Entity entity, double cameraX, double cameraY, double cameraZ, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers);
 
-    @Shadow @Nullable private Framebuffer entityOutlinesFramebuffer;
+    @Shadow private Framebuffer entityOutlinesFramebuffer;
 
     @Inject(method = "loadEntityOutlineShader", at = @At("TAIL"))
     private void onLoadEntityOutlineShader(CallbackInfo info) {
@@ -105,7 +100,7 @@ public abstract class WorldRendererMixin {
             this.entityOutlinesFramebuffer = prevBuffer;
         }
     }
-    
+
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/OutlineVertexConsumerProvider;draw()V"))
     private void onRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo info) {
         Outlines.endRender(tickDelta);
@@ -120,27 +115,6 @@ public abstract class WorldRendererMixin {
     private void onResized(int i, int j, CallbackInfo info) {
         Outlines.onResized(i, j);
     }
-
-    // Break Indicators start
-
-    @Inject(method = "setBlockBreakingInfo", at = @At("HEAD"), cancellable = true)
-    private void onBlockBreakingInfo(int entityId, BlockPos pos, int stage, CallbackInfo ci) {
-        if (0 <= stage && stage <= 8) {
-            BlockBreakingInfo info = new BlockBreakingInfo(entityId, pos);
-            info.setStage(stage);
-            BlockUtils.breakingBlocks.put(entityId, info);
-
-            if (Modules.get().isActive(BreakIndicators.class)) ci.cancel();
-        } else {
-            BlockUtils.breakingBlocks.remove(entityId);
-        }
-    }
-    @Inject(method = "removeBlockBreakingInfo", at = @At("TAIL"))
-    private void onBlockBreakingInfoRemoval(BlockBreakingInfo info, CallbackInfo ci) {
-        BlockUtils.breakingBlocks.values().removeIf(info::equals);
-    }
-
-    // Break Indicators end
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/EntityRenderDispatcher;shouldRender(Lnet/minecraft/entity/Entity;Lnet/minecraft/client/render/Frustum;DDD)Z"))
     private <E extends Entity> boolean shouldRenderRedirect(EntityRenderDispatcher entityRenderDispatcher, E entity, Frustum frustum, double x, double y, double z) {

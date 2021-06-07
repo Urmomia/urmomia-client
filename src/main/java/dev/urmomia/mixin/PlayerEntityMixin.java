@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.mixin;
 
 import dev.urmomia.MainClient;
@@ -21,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static dev.urmomia.utils.Utils.mc;
+
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
     @Inject(method = "clipAtLedge", at = @At("HEAD"), cancellable = true)
@@ -30,9 +27,11 @@ public class PlayerEntityMixin {
         if (event.isSet()) info.setReturnValue(event.isClip());
     }
 
-    @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At("HEAD"))
+    @Inject(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;", at = @At("HEAD"), cancellable = true)
     private void onDropItem(ItemStack stack, boolean bl, boolean bl2, CallbackInfoReturnable<ItemEntity> info) {
-        MainClient.EVENT_BUS.post(DropItemsEvent.get(stack));
+        if (mc.world.isClient) {
+            if (MainClient.EVENT_BUS.post(DropItemsEvent.get(stack)).isCancelled()) info.cancel();
+        }
     }
 
     @Inject(method = "getBlockBreakingSpeed", at = @At(value = "RETURN"), cancellable = true)
