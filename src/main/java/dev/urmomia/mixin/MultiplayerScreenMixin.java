@@ -53,8 +53,6 @@ public class MultiplayerScreenMixin extends Screen {
         addButton(new ButtonWidget(3, this.height - 35 - 3, 75, 20, new LiteralText("AutoLogin"), button -> {
             client.openScreen(GuiThemes.get().alScreen());
         }));
-
-        if (AutoLogin.said == 1) AutoLogin.said = 0;
     }
 
     @Inject(method = "render", at = @At("TAIL"))
@@ -79,5 +77,10 @@ public class MultiplayerScreenMixin extends Screen {
 
         if (Modules.get().get(AutoLogin.class).isActive()) textRenderer.drawWithShadow(matrices, "AutoLogin Enabled", 3, this.height - 10 - 3, ENABLE);
         if (!(Modules.get().get(AutoLogin.class).isActive())) textRenderer.drawWithShadow(matrices, "AutoLogin Disabled", 3, this.height - 10 - 3, DISABLE);
+    }
+
+    @Override
+    public void tick() {
+        if (AutoLogin.said == 1) AutoLogin.said = 0;
     }
 }

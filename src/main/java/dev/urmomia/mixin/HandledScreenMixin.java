@@ -49,7 +49,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Shadow protected int x;
     @Shadow protected int y;
 
-    private static final Identifier TEXTURE_CONTAINER_BACKGROUND = new Identifier("meteor-client", "textures/container.png");
+    private static final Identifier TEXTURE_CONTAINER_BACKGROUND = new Identifier("urmomia-client", "textures/container.png");
     private static final Identifier TEXTURE_MAP_BACKGROUND = new Identifier("textures/map/map_background.png");
     private static final Identifier TEXTURE_BOOK_BACKGROUND = BookScreen.BOOK_TEXTURE;
 

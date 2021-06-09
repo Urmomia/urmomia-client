@@ -1,6 +1,7 @@
 package dev.urmomia.mixin;
 
 import dev.urmomia.systems.modules.Modules;
+import dev.urmomia.systems.modules.misc.AutoLogin;
 import dev.urmomia.systems.modules.misc.AutoReconnect;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
@@ -28,7 +29,7 @@ public class DisconnectedScreenMixin extends ScreenMixin {
             int x = width / 2 - 100;
             int y = Math.min((height / 2 + reasonHeight / 2) + 32, height - 30);
 
-            reconnectBtn = addButton(new ButtonWidget(x, y, 200, 20, new LiteralText(getText()), button -> client.openScreen(new ConnectScreen(new MultiplayerScreen(new TitleScreen()), client, Modules.get().get(AutoReconnect.class).lastServerInfo))));
+            reconnectBtn = addButton(new ButtonWidget(x, y, 200, 20, new LiteralText(getText()), button -> {if(AutoLogin.said == 1) AutoLogin.said = 0; client.openScreen(new ConnectScreen(new MultiplayerScreen(new TitleScreen()), client, Modules.get().get(AutoReconnect.class).lastServerInfo));}));
         }
     }
 

@@ -1,8 +1,3 @@
-/*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client/).
- * Copyright (c) 2021 Meteor Development.
- */
-
 package dev.urmomia.mixin;
 
 import dev.urmomia.MainClient;
@@ -24,7 +19,7 @@ public class ReloadableResourceManagerImplMixin {
             info.setReturnValue(new ResourceImpl("urmomia-client", id, MainClient.class.getResourceAsStream("/assets/urmomia-client/" + id.getPath()), null));
         }
         else if (id.getNamespace().equals("meteor-client")) {
-            info.setReturnValue(new ResourceImpl("meteor-client", id, MainClient.class.getResourceAsStream("/assets/meteor-client/" + id.getPath()), null));
+            info.setReturnValue(new ResourceImpl("meteor-client", id, MainClient.class.getResourceAsStream("/assets/urmomia-client/" + id.getPath()), null));
         }
     }
 }

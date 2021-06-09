@@ -20,7 +20,7 @@ public class NamespaceResourceManagerMixin {
         }
         //this is a meteor skid what did you expect  nadsjdnjnwjnendjewsm q
         else if (id.getNamespace().equals("meteor-client")) {
-            info.setReturnValue(new ResourceImpl("meteor-client", id, MainClient.class.getResourceAsStream("/assets/meteor-client/" + id.getPath()), null));
+            info.setReturnValue(new ResourceImpl("meteor-client", id, MainClient.class.getResourceAsStream("/assets/urmomia-client/" + id.getPath()), null));
         }
     }
 }
