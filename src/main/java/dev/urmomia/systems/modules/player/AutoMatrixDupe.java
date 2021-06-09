@@ -68,7 +68,7 @@ public class AutoMatrixDupe extends Module {
             return;
         }
 
-        for (;ticks >= 40;) {
+        for (;!(ticks >= 40);) {
             ticks++;
             if (ticks == 5) part = 1;
             if (ticks == 15) part = 2;
