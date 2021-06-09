@@ -68,6 +68,17 @@ public class AutoMatrixDupe extends Module {
             return;
         }
 
+        if (!(mc.player.getVehicle() instanceof LlamaEntity)) {
+            error("Not riding a Llama, disabling...");
+            this.toggle();
+            return;
+        }
+        else if (!(InvUtils.findItemInHotbar(Items.WHITE_CARPET) != -1)) {
+            error("Cannot find a White Carpet in Hotbar, disabling...");
+            this.toggle();
+            return;
+        }
+
         for (;!(ticks >= 40);) {
             ticks++;
             if (ticks == 5) part = 1;
@@ -75,14 +86,6 @@ public class AutoMatrixDupe extends Module {
             if (ticks == 25) part = 3;
             if (ticks == 30) part = 4;
             if (ticks >= 50) part = 0; break;
-        }
-        if (!(mc.player.getVehicle() instanceof LlamaEntity)) {
-            error("Not riding a Llama, disabling...");
-            this.toggle();
-        }
-        if (!(InvUtils.findItemInHotbar(Items.WHITE_CARPET) != -1)) {
-            error("Cannot find a White Carpet in Hotbar, disabling...");
-            this.toggle();
         }
 
         if (part == 1 && !(mc.currentScreen instanceof HorseScreen)) mc.player.openRidingInventory();
