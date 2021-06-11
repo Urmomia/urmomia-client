@@ -1,4 +1,6 @@
-# ![Urmomia](https://cdn.discordapp.com/icons/838739066895597606/e2095d9a6e3cab5111d41280ada9f456.webp?size=64) Urmomia Client
+## Urmomia 1.16 is discontinued. "im sick of it trolled" - honsda
+
+# ![Urmomia](https://cdn.discordapp.com/icons/838739066895597606/e2095d9a6e3cab5111d41280ada9f456.webp?size=64) Urmomia Client 1.16
 ![GitHub last commit](https://img.shields.io/github/last-commit/Urmomia/Urmomia-Client)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Urmomia/Urmomia-Client)
 ![GitHub contributors](https://img.shields.io/github/contributors/Urmomia/Urmomia-Client)
